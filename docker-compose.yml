@@ -71,20 +71,20 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/payzo_db
       KEYCLOAK_AUTH_SERVER_URL: http://keycloak:8080
       DB_PASSWORD: ${DB_PASSWORD:-gg}
-      KC_CLIENTS_SECRET: ${KC_CLIENTS_SECRET:}
-      KC_BACKOFFICE_SECRET: ${KC_BACKOFFICE_SECRET:}
+      KC_CLIENTS_SECRET: ${KC_CLIENTS_SECRET:-}
+      KC_BACKOFFICE_SECRET: ${KC_BACKOFFICE_SECRET:-}
       PAYZO_EMAIL: ${PAYZO_EMAIL:-payzo.bank@gmail.com}
-      PAYZO_EMAIL_APP_PASSWORD: ${PAYZO_EMAIL_APP_PASSWORD:}
+      PAYZO_EMAIL_APP_PASSWORD: ${PAYZO_EMAIL_APP_PASSWORD:-}
       # Spring binds spring.mail.username/password from these env vars (kebab
       # → underscore convention); plus we feed the same creds back through
       # the canonical SPRING_MAIL_* vars so anything reading those works too.
       SPRING_MAIL_USERNAME: ${PAYZO_EMAIL:-payzo.bank@gmail.com}
-      SPRING_MAIL_PASSWORD: ${PAYZO_EMAIL_APP_PASSWORD:}
+      SPRING_MAIL_PASSWORD: ${PAYZO_EMAIL_APP_PASSWORD:-}
       # Live Vonage credentials — used to deliver OTPs over SMS. Override in
       # production via .env. OTP_DELIVERY_ENABLED below controls whether they
       # actually fire (false → SmsService logs to console only).
-      VONAGE_API_KEY: ${VONAGE_API_KEY:}
-      VONAGE_API_SECRET: ${VONAGE_API_SECRET:}
+      VONAGE_API_KEY: ${VONAGE_API_KEY:-}
+      VONAGE_API_SECRET: ${VONAGE_API_SECRET:-}
       VONAGE_FROM: ${VONAGE_FROM:-PayZo}
       ML_ENABLED: ${ML_ENABLED:-true}
       # Real email delivery in dev — flip to false to fall back to log-only.
