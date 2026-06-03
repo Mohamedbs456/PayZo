@@ -1,0 +1,20 @@
+fastapi>=0.111.0,<1.0
+uvicorn[standard]>=0.29.0,<1.0
+xgboost>=2.0.0,<3.0
+# v5 multi-algorithm runtime — Tier 1 / Tier 2 promotion can pick any of
+# xgboost / lightgbm / catboost / random_forest / extra_trees, and the
+# TierLoader imports the winner's library lazily. Ship all candidate libs in
+# the runtime image so any future re-training can swap tiers without a rebuild.
+lightgbm>=4.0.0,<5.0
+catboost>=1.2.0,<2.0
+pydantic>=2.7.0,<3.0
+numpy>=1.26.4
+scikit-learn>=1.3.0,<2.0
+joblib>=1.3.0
+shap>=0.44.0,<1.0
+pyyaml>=6.0,<7.0
+# data_generation features and trust-history join read parquet at training
+# time only, but the orchestrator also reads features.parquet on cold-start
+# audits. Keep fastparquet light enough for the runtime image.
+fastparquet>=2024.5.0
+pandas>=2.0.0,<3.0

@@ -1,0 +1,141 @@
+<mxfile host="Electron">
+  <diagram id="payzo-arch" name="PayZo Architecture">
+    <mxGraphModel dx="1471" dy="894" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="620" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t1bg" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EEF2F7;strokeColor=none;shadow=0;" value="" vertex="1">
+          <mxGeometry height="120" width="730" x="60" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="t1lbl" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1F3A5F;fontColor=#FFFFFF;fontStyle=1;fontSize=11;fontFamily=Helvetica;horizontal=0;shadow=0;strokeColor=#1F3A5F;" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;Presentation&lt;/font&gt;" vertex="1">
+          <mxGeometry height="120" width="40" x="60" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="clientApp" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1F3A5F;strokeWidth=2;fontColor=#1F3A5F;fontStyle=1;fontSize=12;fontFamily=Helvetica;shadow=0;" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;Client App&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="280" x="130" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="boApp" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1F3A5F;strokeWidth=2;fontColor=#1F3A5F;fontStyle=1;fontSize=12;fontFamily=Helvetica;shadow=0;" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;Backoffice App&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="280" x="470" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="t2bg" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EEF2F7;strokeColor=none;strokeWidth=0.5;shadow=0;" value="" vertex="1">
+          <mxGeometry height="120" width="730" x="60" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="t2lbl" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1F3A5F;fontColor=#FFFFFF;fontStyle=1;fontSize=11;fontFamily=Helvetica;horizontal=0;shadow=0;strokeColor=#1F3A5F;" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;Authentication&lt;/font&gt;" vertex="1">
+          <mxGeometry height="120" width="40" x="60" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="authSvc" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1F3A5F;strokeWidth=2;fontColor=#1F3A5F;fontStyle=1;fontSize=12;fontFamily=Helvetica;verticalAlign=top;shadow=0;container=1;collapsible=0;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Auth Service :8080&lt;/font&gt;" vertex="1">
+          <mxGeometry height="95" width="620" x="130" y="168" as="geometry" />
+        </mxCell>
+        <mxCell id="clientsRealm" parent="authSvc" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1F3A5F;strokeWidth=1;fontColor=#1F3A5F;fontSize=10;fontFamily=Helvetica;shadow=0;" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;clients realm&lt;/font&gt;" vertex="1">
+          <mxGeometry height="50" width="285" x="15" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="boRealm" parent="authSvc" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1F3A5F;strokeWidth=1;fontColor=#1F3A5F;fontSize=10;fontFamily=Helvetica;shadow=0;" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;backoffice realm&lt;/font&gt;" vertex="1">
+          <mxGeometry height="50" width="285" x="320" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="t3bg" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EEF2F7;strokeColor=none;shadow=0;" value="" vertex="1">
+          <mxGeometry height="180" width="730" x="60" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="t3lbl" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1F3A5F;fontColor=#FFFFFF;fontStyle=1;fontSize=11;fontFamily=Helvetica;horizontal=0;shadow=0;strokeColor=#1F3A5F;" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;Application&lt;/font&gt;" vertex="1">
+          <mxGeometry height="180" width="40" x="60" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="backend" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1F3A5F;strokeWidth=2;fontColor=#1F3A5F;fontStyle=1;fontSize=12;fontFamily=Helvetica;verticalAlign=top;shadow=0;container=1;collapsible=0;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Backend :8081&lt;/font&gt;" vertex="1">
+          <mxGeometry height="155" width="620" x="130" y="303" as="geometry" />
+        </mxCell>
+        <mxCell id="iam" parent="backend" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1F3A5F;strokeWidth=1;fontColor=#1F3A5F;fontSize=9;fontFamily=Helvetica;shadow=0;" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Identity &amp;amp; Access&lt;/font&gt;" vertex="1">
+          <mxGeometry height="55" width="112" x="15" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="txAlerts" parent="backend" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1F3A5F;strokeWidth=1;fontColor=#1F3A5F;fontSize=9;fontFamily=Helvetica;shadow=0;" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Transactions &amp;amp; Alerts&lt;/font&gt;" vertex="1">
+          <mxGeometry height="55" width="112" x="135" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="dataMgmt" parent="backend" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1F3A5F;strokeWidth=1;fontColor=#1F3A5F;fontSize=9;fontFamily=Helvetica;shadow=0;" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Data Management&lt;/font&gt;" vertex="1">
+          <mxGeometry height="55" width="112" x="255" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="bankSync" parent="backend" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1F3A5F;strokeWidth=1;fontColor=#1F3A5F;fontSize=9;fontFamily=Helvetica;shadow=0;" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Bank Synchronization&lt;/font&gt;" vertex="1">
+          <mxGeometry height="55" width="112" x="375" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="notifDlvr" parent="backend" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1F3A5F;strokeWidth=1;fontColor=#1F3A5F;fontSize=9;fontFamily=Helvetica;shadow=0;" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Notification Delivery&lt;/font&gt;" vertex="1">
+          <mxGeometry height="55" width="112" x="495" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="mlSvc" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1F3A5F;strokeWidth=2;fontColor=#1F3A5F;fontStyle=1;fontSize=12;fontFamily=Helvetica;verticalAlign=top;shadow=0;container=1;collapsible=0;" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;ML Service :5000&lt;/font&gt;" vertex="1">
+          <mxGeometry height="155" width="180" x="850" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="layer1" parent="mlSvc" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1F3A5F;strokeWidth=1;fontColor=#1F3A5F;fontSize=10;fontFamily=Helvetica;shadow=0;" value="Layer 1" vertex="1">
+          <mxGeometry height="33" width="150" x="15" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="layer2" parent="mlSvc" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1F3A5F;strokeWidth=1;fontColor=#1F3A5F;fontSize=10;fontFamily=Helvetica;shadow=0;" value="Layer 2" vertex="1">
+          <mxGeometry height="33" width="150" x="15" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="layer3" parent="mlSvc" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1F3A5F;strokeWidth=1;fontColor=#1F3A5F;fontSize=10;fontFamily=Helvetica;shadow=0;" value="Layer 3" vertex="1">
+          <mxGeometry height="33" width="150" x="15" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="t4bg" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EEF2F7;strokeColor=#E8E8E8;strokeWidth=0.5;shadow=0;" value="" vertex="1">
+          <mxGeometry height="90" width="730" x="60" y="485" as="geometry" />
+        </mxCell>
+        <mxCell id="t4lbl" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1F3A5F;fontColor=#FFFFFF;fontStyle=1;fontSize=11;fontFamily=Helvetica;horizontal=0;shadow=0;strokeColor=#1F3A5F;" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;Data&lt;/font&gt;" vertex="1">
+          <mxGeometry height="90" width="40" x="60" y="485" as="geometry" />
+        </mxCell>
+        <mxCell id="database" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1F3A5F;strokeWidth=2;fontColor=#1F3A5F;fontStyle=1;fontSize=12;fontFamily=Helvetica;shadow=0;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Database :5432&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="620" x="130" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="cbs" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1F3A5F;strokeWidth=2;fontColor=#1F3A5F;fontSize=12;fontFamily=Helvetica;verticalAlign=top;shadow=0;dashed=1;dashPattern=8 8;" value="&lt;b&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;CBS :8082&lt;/font&gt;&lt;/b&gt;&lt;hr size=&quot;1&quot;&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;bank catalog&lt;br&gt;client records&lt;br&gt;accounts&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;transactions history&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="150" width="180" x="850" y="50.5" as="geometry" />
+        </mxCell>
+        <mxCell id="emailSvc" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1F3A5F;strokeWidth=2;fontColor=#1F3A5F;fontStyle=1;fontSize=12;fontFamily=Helvetica;shadow=0;dashed=1;dashPattern=8 8;" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;Email Service&lt;/font&gt;" vertex="1">
+          <mxGeometry height="65" width="180" x="850" y="225.5" as="geometry" />
+        </mxCell>
+        <mxCell id="smsSvc" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1F3A5F;strokeWidth=2;fontColor=#1F3A5F;fontStyle=1;fontSize=12;fontFamily=Helvetica;shadow=0;dashed=1;dashPattern=8 8;" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;SMS Service&lt;/font&gt;" vertex="1">
+          <mxGeometry height="65" width="180" x="850" y="315.5" as="geometry" />
+        </mxCell>
+        <mxCell id="arrowAuth" edge="1" parent="1" style="endArrow=block;endFill=1;strokeColor=#1F3A5F;strokeWidth=1.5;fontColor=#1F3A5F;fontSize=10;fontFamily=Helvetica;html=1;" value="OAuth2 / JWT">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="440" y="168" as="sourcePoint" />
+            <mxPoint x="440" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrowDb" edge="1" parent="1" style="endArrow=block;endFill=1;strokeColor=#1F3A5F;strokeWidth=1.5;fontColor=#1F3A5F;fontSize=10;fontFamily=Helvetica;html=1;" value="JPA / JDBC">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="440" y="458" as="sourcePoint" />
+            <mxPoint x="440" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrowMl" edge="1" parent="1" source="backend" style="endArrow=block;endFill=1;strokeColor=#1F3A5F;strokeWidth=1.5;fontColor=#1F3A5F;fontSize=10;fontFamily=Helvetica;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;rounded=0;curved=0;exitX=1;exitY=0.75;exitDx=0;exitDy=0;" target="mlSvc" value="score transfer">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="750" y="383" as="sourcePoint" />
+            <mxPoint x="830" y="383" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrowCbs" edge="1" parent="1" source="backend" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;endFill=1;strokeColor=#1F3A5F;strokeWidth=1.5;fontColor=#1F3A5F;fontSize=10;fontFamily=Helvetica;html=1;exitX=0.996;exitY=0.055;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitPerimeter=0;" target="cbs" value="REST">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="780" y="312" />
+              <mxPoint x="780" y="126" />
+            </Array>
+            <mxPoint x="750" y="330" as="sourcePoint" />
+            <mxPoint x="1080" y="125" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrowEmail" edge="1" parent="1" source="backend" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;endFill=1;strokeColor=#1F3A5F;strokeWidth=1.5;fontColor=#1F3A5F;fontSize=10;fontFamily=Helvetica;html=1;exitX=1.001;exitY=0.348;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="emailSvc" value="async notify">
+          <mxGeometry relative="1" x="0.1056" y="18" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="810" y="357" />
+              <mxPoint x="810" y="258" />
+            </Array>
+            <mxPoint x="750" y="420" as="sourcePoint" />
+            <mxPoint x="1080" y="258" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrowSms" edge="1" parent="1" source="backend" style="edgeStyle=orthogonalEdgeStyle;rounded=0;endArrow=block;endFill=1;strokeColor=#1F3A5F;strokeWidth=1.5;fontColor=#1F3A5F;fontSize=10;fontFamily=Helvetica;html=1;exitX=0.996;exitY=0.56;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="smsSvc" value="async notify">
+          <mxGeometry relative="1" x="0.2431" y="8" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="830" y="390" />
+              <mxPoint x="830" y="348" />
+            </Array>
+            <mxPoint x="750" y="440" as="sourcePoint" />
+            <mxPoint x="1080" y="348" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,27 @@
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {1.1}{\ignorespaces \xpg@aux {}{english}\ignorespaces Project identification}}{2}{table.caption.9}%
+\contentsline {table}{\numberline {1.2}{\ignorespaces \xpg@aux {}{english}\ignorespaces Capability comparison}}{4}{table.caption.12}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {2.1}{\ignorespaces \xpg@aux {}{english}\ignorespaces Actors}}{7}{table.caption.16}%
+\contentsline {table}{\numberline {2.2}{\ignorespaces \xpg@aux {}{english}\ignorespaces Non-functional requirements}}{10}{table.caption.17}%
+\contentsline {table}{\numberline {2.3}{\ignorespaces \xpg@aux {}{english}\ignorespaces Use case: Registration}}{13}{table.caption.20}%
+\contentsline {table}{\numberline {2.4}{\ignorespaces \xpg@aux {}{english}\ignorespaces Use case: Peer transfer}}{13}{table.caption.21}%
+\contentsline {table}{\numberline {2.5}{\ignorespaces \xpg@aux {}{english}\ignorespaces Use case: Registration approval}}{14}{table.caption.23}%
+\contentsline {table}{\numberline {2.6}{\ignorespaces \xpg@aux {}{english}\ignorespaces Use case: Direct registration}}{14}{table.caption.24}%
+\contentsline {table}{\numberline {2.7}{\ignorespaces \xpg@aux {}{english}\ignorespaces Use case: Fraud alert review}}{15}{table.caption.26}%
+\contentsline {table}{\numberline {2.8}{\ignorespaces \xpg@aux {}{english}\ignorespaces Use case: Staff management}}{16}{table.caption.28}%
+\contentsline {table}{\numberline {2.9}{\ignorespaces \xpg@aux {}{english}\ignorespaces Use case: ML threshold management}}{17}{table.caption.29}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {4.1}{\ignorespaces \xpg@aux {}{english}\ignorespaces Public fraud datasets reviewed}}{29}{table.caption.40}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces \xpg@aux {}{english}\ignorespaces Open-source fraud models evaluated}}{30}{table.caption.41}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces \xpg@aux {}{english}\ignorespaces The 24 scoring features}}{31}{table.caption.42}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces \xpg@aux {}{english}\ignorespaces Dataset scale}}{32}{table.caption.43}%
+\contentsline {table}{\numberline {4.5}{\ignorespaces \xpg@aux {}{english}\ignorespaces Fraud archetypes}}{32}{table.caption.44}%
+\contentsline {table}{\numberline {4.6}{\ignorespaces \xpg@aux {}{english}\ignorespaces Candidate benchmark (validation set)}}{33}{table.caption.45}%
+\contentsline {table}{\numberline {4.7}{\ignorespaces \xpg@aux {}{english}\ignorespaces Test set metrics}}{34}{table.caption.47}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {5.1}{\ignorespaces \xpg@aux {}{english}\ignorespaces Development machine}}{35}{table.caption.48}%
+\contentsline {table}{\numberline {5.2}{\ignorespaces \xpg@aux {}{english}\ignorespaces Development tools}}{36}{table.caption.49}%
+\contentsline {table}{\numberline {5.3}{\ignorespaces \xpg@aux {}{english}\ignorespaces Technologies and frameworks}}{36}{table.caption.50}%
+\contentsline {table}{\numberline {5.4}{\ignorespaces \xpg@aux {}{english}\ignorespaces Unit tests by action}}{41}{table.caption.57}%

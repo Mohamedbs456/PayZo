@@ -1,0 +1,4 @@
+# Ignore all CSV files — only synthetic_dataset.csv is used by the training pipeline.
+# The legacy Dataset.csv (PaySim) is unused and should not be committed.
+*.csv
+!.gitkeep

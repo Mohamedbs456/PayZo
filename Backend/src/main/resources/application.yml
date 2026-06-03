@@ -1,0 +1,140 @@
+spring:
+  application:
+    name: payzo-backend
+
+  # Datasource — SPRING_DATASOURCE_URL overridden in Docker; defaults to local Docker postgres on 5433
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/payzo_db}
+    username: payzo_user
+    password: ${DB_PASSWORD:}
+    driver-class-name: org.postgresql.Driver
+
+  # JPA / Hibernate — ddl-auto defaults to validate; dev profile overrides to create
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: false
+
+  # Multipart — profile pictures max 5 MB
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+  # Email — credentials supplied via env vars
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: payzo.bank@gmail.com
+    password: ${PAYZO_EMAIL_APP_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+
+  # Security — multi-issuer JWT (clients realm + backoffice realm)
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Overridden per-profile with the correct issuer URI
+          issuer-uri: ${KC_CLIENTS_ISSUER_URI:http://localhost:8080/realms/clients}
+
+# Actuator — health endpoint only, no auth required
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
+# Server
+server:
+  port: 8081
+  servlet:
+    context-path: /
+
+# CBS — direct DB access (D2). The simulator's REST endpoints stay available for
+# debugging on cbs.base-url, but payzo-backend reads/writes cbs_db over JPA.
+cbs:
+  datasource:
+    url: ${CBS_DATASOURCE_URL:jdbc:postgresql://localhost:5433/cbs_db}
+    username: cbs_user
+    password: ${CBS_DB_PASSWORD:cbs_dev_password}
+    driver-class-name: org.postgresql.Driver
+  base-url: ${CBS_BASE_URL:http://localhost:8082}
+  api-prefix: /cbs/api/v1
+
+# ML Service integration
+ml:
+  enabled: ${ML_ENABLED:false}
+  base-url: ${ML_BASE_URL:http://localhost:5000}
+  api-prefix: /ml/api/v1
+  connect-timeout-ms: 2000
+  read-timeout-ms: 10000
+
+# Keycloak Admin Client
+keycloak:
+  auth-server-url: ${KC_AUTH_SERVER_URL:http://localhost:8080}
+  realms:
+    clients:
+      realm: clients
+      client-id: payzo-backend
+      client-secret: ${KC_CLIENTS_SECRET:}
+    backoffice:
+      realm: backoffice
+      client-id: payzo-backend-bo
+      client-secret: ${KC_BACKOFFICE_SECRET:}
+  # Master-realm credentials — used ONLY at backend boot by
+  # KeycloakBootstrapService to self-provision the default SuperAdmin
+  # (username/password below) when none exists in the backoffice realm.
+  # Mirrors the KEYCLOAK_ADMIN / KEYCLOAK_ADMIN_PASSWORD pair the
+  # Keycloak container itself uses, so dev "just works".
+  master:
+    username: ${KC_ADMIN_USERNAME:admin}
+    password: ${KC_ADMIN_PASSWORD:admin}
+  bootstrap:
+    superadmin:
+      username: ${SA_BOOTSTRAP_USERNAME:superadmin}
+      email:    ${SA_BOOTSTRAP_EMAIL:superadmin@payzo.local}
+      password: ${SA_BOOTSTRAP_PASSWORD:Superadmin123!}
+      enabled:  ${SA_BOOTSTRAP_ENABLED:true}
+
+# Vonage SMS
+vonage:
+  api-key: ${VONAGE_API_KEY:dev-placeholder}
+  api-secret: ${VONAGE_API_SECRET:dev-placeholder}
+  # Alpha sender ID shown as the SMS "from" — overridable per-env.
+  # Tunisian carriers display this verbatim; max 11 chars, no spaces.
+  from: ${VONAGE_FROM:PayZo}
+
+# OTP delivery feature flag
+otp:
+  delivery:
+    enabled: ${OTP_DELIVERY_ENABLED:false}
+
+# Profile picture storage
+uploads:
+  path: ${UPLOADS_PATH:/app/uploads}
+
+# PayZo client-app URLs — used in transactional emails (e.g. Join PayZo CTA on
+# transfers received by non-PayZo CBS clients).
+payzo:
+  client:
+    signup-url: ${PAYZO_CLIENT_SIGNUP_URL:http://localhost:5173/signup}
+
+# Forgot-password reset token signing secret (D44 / Impact 20)
+# In production: must be set via PASSWORD_RESET_SECRET (≥ 32 bytes recommended).
+# In dev: leave blank — PasswordResetTokenService will mint an ephemeral key at boot.
+security:
+  password-reset:
+    secret: ${PASSWORD_RESET_SECRET:}

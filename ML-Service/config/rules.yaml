@@ -1,0 +1,87 @@
+# PayZo Tier 3 — deterministic rule firewall.
+#
+# These rules are the last line of defense when both Tier 1 (XGBoost) and
+# Tier 2 (LR) are unavailable. They are also evaluated during training to
+# verify each rule fires on no more than `legitimate_false_positive_budget`
+# of legit transactions on the train slice.
+#
+# Each rule references a Python predicate registered in tier3_rule_firewall.py
+# via the @rule decorator. Parameters are passed through as a dict. Decisions
+# combine by max-severity (BLOCK > REVIEW > ALLOW); fired rule IDs and reasons
+# are returned alongside.
+#
+# Percentile-based params (e.g., amount_percentile) are resolved at TRAIN time
+# from the actual data distribution and the resolved cut is stored in
+# artifacts/tier3_thresholds.json. The runtime engine reads from there.
+
+version: 1
+
+defaults:
+  evaluation: any                           # first-fired rule's decision wins on tie
+  legitimate_false_positive_budget: 0.05    # alert during training if any rule fires
+                                            # on > 5% of legit train tx
+
+rules:
+  - id: R001_AMOUNT_P99_NEW_BENEFICIARY
+    name: Large transfer to new beneficiary
+    description: >
+      Amount above the platform 99th percentile AND the destination account has
+      no prior history with this sender in the lookup window.
+    condition: amount_above_percentile_and_new_beneficiary
+    params:
+      amount_percentile: 0.99
+      lookup_window_days: 90
+    severity: HIGH
+    decision: BLOCK
+    reason: "Amount exceeds top 1% of platform transactions and recipient has no prior history"
+
+  - id: R002_NIGHT_HIGH_AMOUNT
+    name: Out-of-hours high-value transfer
+    description: Initiated during night hours (22:00–06:00) AND amount > 5 000 TND.
+    condition: night_amount_threshold
+    params:
+      amount_min: 5000
+    severity: MEDIUM
+    decision: REVIEW
+    reason: "Initiated outside daytime hours with amount over 5 000 TND"
+
+  - id: R003_VELOCITY_BURST
+    name: Velocity burst
+    description: >
+      100+ transactions in the last 24h to 50+ distinct destinations. v5
+      threshold widened (was 8/5) because the legit BUSINESS_OWNER coffee-shop
+      tail can do 60-80 tx/day to 30+ recipients without being fraud. Tier 3
+      is the last-resort firewall here — CARD_TESTING fraud against
+      BUSINESS_OWNER produces ≥150 tx so it still catches the worst cases.
+    condition: velocity_check
+    params:
+      tx_count_min: 100
+      distinct_dest_min: 50
+    severity: HIGH
+    decision: BLOCK
+    reason: "100+ transactions in 24 hours to 50+ distinct recipients — extreme card testing"
+
+  - id: R004_NEW_ACCOUNT_LARGE
+    name: Brand-new account large transfer
+    description: >
+      sender_account_age_days < 7 AND amount > 8 000 TND. v5 threshold raised
+      (was 2 000) because the archetype-aware amount distribution puts
+      BUSINESS_OWNER / HIGH_NET_WORTH legit transfers well above the old cut
+      even for new accounts.
+    condition: new_account_large_amount
+    params:
+      max_age_days: 7
+      amount_min: 8000
+    severity: HIGH
+    decision: BLOCK
+    reason: "Account less than 7 days old transferring more than 8 000 TND"
+
+  - id: R005_SAVINGS_LARGE_NIGHT
+    name: Savings drain at night
+    description: SAVINGS source account + amount > 10 000 TND + night hour.
+    condition: savings_night_large
+    params:
+      amount_min: 10000
+    severity: HIGH
+    decision: BLOCK
+    reason: "Large outgoing transfer from a SAVINGS account during night hours"

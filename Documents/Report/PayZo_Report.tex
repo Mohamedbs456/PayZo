@@ -1,0 +1,2051 @@
+%==============================================================
+%  PayZo — Final Year Project (PFE) Report
+%  Mohamed Ben Salem
+%  Licence en Genie Logiciel et Systeme d'Information
+%  Faculte des Sciences de Monastir — 2025/2026
+%
+%  Compile with LuaLaTeX or XeLaTeX (run twice for TOC / references).
+%  (pdfLaTeX still builds the report, but the Arabic epigraph page after the
+%   cover needs LuaLaTeX/XeLaTeX + the Amiri font to render.)
+%  Figures live in ./figures/ (diagram PNGs already copied there).
+%==============================================================
+\documentclass[12pt,a4paper]{report}
+
+% ---------- Encoding, language & fonts (engine-aware) ----------
+% The Arabic epigraph page needs a Unicode engine: compile with LuaLaTeX
+% (recommended) or XeLaTeX. Plain pdfLaTeX still builds the whole report,
+% but that one page then shows a short placeholder instead of the Arabic.
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage[english]{babel}
+  \usepackage{lmodern}                       % Latin Modern
+\else
+  \usepackage{fontspec}
+  \usepackage{polyglossia}                   % best-in-class multilingual for Lua/XeLaTeX
+  \setmainlanguage{english}
+  \setotherlanguage{arabic}
+  \setmainfont{Latin Modern Roman}           % keep Latin text identical to pdfLaTeX build
+  \setsansfont{Latin Modern Sans}
+  \setmonofont{Latin Modern Mono}
+  % Amiri: Qur'anic-grade Naskh (installed via MiKTeX)
+  \newfontfamily\arabicfont   [Script=Arabic, Language=Arabic, Scale=1.15]{Amiri}
+  \newfontfamily\arabicfontsf [Script=Arabic, Language=Arabic, Scale=1.15]{Amiri}
+  \newfontfamily\arabicfonttt [Script=Arabic, Language=Arabic, Scale=1.15]{Amiri}
+\fi
+
+% ---------- Page geometry & line spacing ----------
+\usepackage[a4paper,margin=2.2cm,bindingoffset=0.7cm]{geometry}
+\usepackage{setspace}
+\setstretch{1.15}
+
+% ---------- Graphics, colour, tables ----------
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{makecell}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{float}            % [H] placement
+\usepackage{pdflscape}        % landscape pages
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+
+% ---------- Brand colours ----------
+\definecolor{pznavy}{HTML}{1F3A5F}
+\definecolor{pzgreen}{HTML}{2E7D32}
+\definecolor{pzred}{HTML}{C62828}
+\definecolor{pzamber}{HTML}{C77800}
+\definecolor{fblue}{HTML}{0000FF}     % faculty template blue
+\definecolor{pzcream}{HTML}{F1FAEE}   % cover background
+\definecolor{pzdark}{HTML}{182C49}    % cover accent
+
+% ---------- Comparison-table marks (documented / absent / partial) ----------
+\usepackage{pifont}
+\usepackage{wasysym}          % \LEFTcircle = partial
+\newcommand{\yes}{\textcolor{pzgreen}{\ding{51}}}
+\newcommand{\no}{\textcolor{pzred}{\ding{55}}}
+\newcommand{\partialmark}{\textcolor{pzamber}{\LEFTcircle}}
+
+% ---------- Chapter & section styling ----------
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{pznavy}}
+  {\filleft\large CHAPTER \thechapter}
+  {1ex}
+  {\filleft}
+  [\vspace{2pt}{\color{pznavy}\titlerule[1.5pt]}]
+\titlespacing*{\chapter}{0pt}{0pt}{26pt}
+\titleformat{\section}{\normalfont\Large\bfseries\color{pznavy}}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection}{0.8em}{}
+
+% ---------- Headers / footers ----------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\nouppercase{\leftmark}}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancypagestyle{plain}{%
+  \fancyhf{}\fancyfoot[C]{\small\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+% ---------- Caption format: "Figure 1.1: ..." ----------
+\captionsetup{labelsep=colon,font=small,labelfont=bf}
+
+% ---------- Code listings ----------
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\small,breaklines=true,frame=single,
+        numbers=left,numberstyle=\tiny\color{gray},
+        keywordstyle=\color{pznavy}\bfseries,commentstyle=\color{gray},
+        showstringspaces=false}
+
+% ---------- Hyperlinks (subtle coloured) ----------
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linktoc=all,
+  linkcolor=pznavy,citecolor=pznavy,urlcolor=pznavy,filecolor=pznavy}
+\usepackage{bookmark}
+\usepackage{url}              % URL line-breaking in webography
+\usepackage{comment}          % block-comment the LaTeX cover (faculty cover used instead)
+
+% ---------- Webography citation: \webcite{label}{number} ----------
+\newcommand{\webcite}[2]{\textsuperscript{\hyperref[#1]{[W#2]}}}
+
+%==============================================================
+\begin{document}
+
+%==============================================================
+%  COVER PAGE — Faculty of Sciences of Monastir template (English)
+%==============================================================
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+\thispagestyle{empty}
+\centering
+
+% ============================================================
+%  COVER  —  background & decorative layer (drawn first = behind)
+% ============================================================
+\begin{tikzpicture}[remember picture, overlay]
+  % --- cream base ---
+  \fill[pzcream] (current page.north west) rectangle (current page.south east);
+
+  % --- top navy strip + amber hairline ---
+  \fill[pzdark]  (current page.north west) rectangle ($(current page.north east)+(0,-1.5)$);
+  \fill[pzamber] ($(current page.north west)+(0,-1.5)$) rectangle ($(current page.north east)+(0,-1.56)$);
+  % programme code (right of strip) — bold sans-serif
+  \node[anchor=east, text=pzcream, font=\sffamily\bfseries]
+        at ($(current page.north east)+(-1.1,-0.75)$) {LGLSI-3-26-17};
+
+  % --- bottom contents (no band — cream background) ---
+
+  % host organisation — logo (left)
+  \node[anchor=west, align=left] at ($(current page.south west)+(2.2,2.5)$)
+       {{\color{pzdark!60}\footnotesize\MakeUppercase{Hosted at}}\\[5pt]%
+        \includegraphics[height=0.85cm]{proxym.png}};
+  % academic year (centre)
+  \node[anchor=center, align=center] at ($(current page.south)+(0.2,2.5)$)
+       {{\color{pzdark!60}\footnotesize\MakeUppercase{Academic Year}}\\[3pt]%
+        {\color{pzdark}\large\bfseries 2025\,/\,2026}};
+
+  % QR placeholder (right) — 2.4 cm tile -----------------------------------
+  \coordinate (qrc) at ($(current page.south east)+(-2.9,2.5)$);
+  \node[anchor=south, text=pzdark!60, font=\scriptsize] at ($(qrc)+(0,1.3)$) {Scan for source code};
+  \node[anchor=center] at (qrc) {\includegraphics[width=2.6cm]{qr.png}};
+\end{tikzpicture}
+
+% ============================================================
+%  COVER  —  content layer
+% ============================================================
+\vspace*{0.35cm}
+
+% ---- institution header ----
+\noindent
+\begin{minipage}[c]{0.17\linewidth}
+  \centering\includegraphics[height=2.5cm]{uni.png}
+\end{minipage}%
+\hfill
+\begin{minipage}[c]{0.62\linewidth}
+  \centering
+  {\footnotesize\color{pzdark}\textbf{Tunisian Republic}\\[2pt]
+  Ministry of Higher Education and Scientific Research\\[5pt]
+  \textbf{University of Monastir}\\[1pt]
+  \textbf{Faculty of Sciences of Monastir}}
+\end{minipage}%
+\hfill
+\begin{minipage}[c]{0.17\linewidth}
+  \centering\includegraphics[height=2.2cm]{fsm.png}
+\end{minipage}
+
+\vspace{12pt}
+\noindent{\color{pzdark!55}\rule{\linewidth}{0.8pt}}
+
+\vspace{0.4cm}
+
+% ---- report type ----
+{\small\color{pzdark!90}\MakeUppercase{Final Year Internship Report}}\\[4pt]
+{\footnotesize\color{black!75}in fulfilment of the requirements for the Bachelor's Degree\\[1pt]
+in Software Engineering and Information Systems}
+
+\vspace{22pt}
+
+% ---- brand + title (hero) ----
+\includegraphics[height=2.2cm]{PayzoCover.png}\\[16pt]
+{\color{pzamber}\rule{3.6cm}{1.3pt}}\\[12pt]
+{\fontsize{30}{34}\selectfont\bfseries\color{pzdark}Fraud Detection}\\[5pt]
+{\Large\color{pznavy}in Banking Transactions}\\[12pt]
+{\color{pzamber}\rule{3.6cm}{1.3pt}}
+
+\vspace{1.5cm}
+
+% ---- people ----
+{\footnotesize\color{black!55}\MakeUppercase{Prepared by}}\\[3pt]
+{\Large\color{pzdark}\bfseries Mohamed Ben Salem}\\[14pt]
+
+{\color{black!70}Defended on 13 June 2026 at 12:30, Amphi 3}\\[14pt]
+
+{\footnotesize\color{black!55}\MakeUppercase{Jury}}\\[7pt]
+{\color{black!70}President}\;\;{\color{pzdark}\bfseries Mohamed Neji Maatouk}\\[5pt]
+{\color{black!70}Reviewer}\;\;{\color{pzdark}\bfseries Nizar Kerkeni}\\[5pt]
+{\color{black!70}Academic Supervisor}\;\;{\color{pzdark}\bfseries Mohsen Maraoui}\\[5pt]
+{\color{black!70}Professional Supervisor}\;\;{\color{pzdark}\bfseries Chaima Zaier}
+
+\vspace*{1.1cm}
+\end{titlepage}
+\hypersetup{pageanchor=true}
+
+%==============================================================
+%  QUR'ANIC EPIGRAPH  — white page, black ink, Amiri Naskh
+%  Engine: LuaLaTeX (recommended) or XeLaTeX + Amiri (MiKTeX)
+%==============================================================
+\thispagestyle{empty}
+\color{black}
+\vspace*{\fill}
+
+\ifPDFTeX
+  \begin{center}
+    {\itshape\large
+      [\,Qur'anic epigraph — recompile with LuaLaTeX to render.\,]}
+  \end{center}
+\else
+  \begin{center}
+  \begin{minipage}{0.78\linewidth}
+
+    %% ── Basmala ──────────────────────────────────────────────
+    \begin{Arabic}
+      \centering
+      {\LARGE بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ}
+    \end{Arabic}
+
+    \vspace{2.2cm}
+
+    %% ── Qur'anic verse ───────────────────────────────────────
+    \begin{Arabic}
+      \centering
+      {\fontsize{26}{34}\selectfont
+        ﴿\; وَقُلْ رَبِّ زِدْنِي عِلْمًا \;﴾}
+    \end{Arabic}
+
+    \vspace{0.55cm}
+
+    %% ── Reference (surah name RTL, verse number LTR) ─────────
+    \begin{Arabic}
+      \centering
+      {\normalsize  طه \ — \ 411 }   
+    \end{Arabic}
+
+    \vspace{2.0cm}
+
+    %% ── Divider ──────────────────────────────────────────────
+    \begin{center}
+      {\color{black!35}\rule{0.38\linewidth}{0.35pt}}
+    \end{center}
+
+    \vspace{2.0cm}
+
+    %% ── Du'ā ─────────────────────────────────────────────────
+    \begin{Arabic}
+      \centering
+      {\large اللَّهُمَّ ارْزُقْنِي عِلْمًا نَافِعًا،
+               وَقَلْبًا خَاشِعًا،
+               وَلِسَانًا ذَاكِرًا.}\\[1.05em]
+      {\large اللَّهُمَّ افْتَحْ عَلَيَّ أَبْوَابَ حِكْمَتِكَ،
+               وَعَلِّمْنِي مَا يَنْفَعُنِي،
+               وَانْفَعْنِي بِمَا عَلَّمْتَنِي،
+               وَزِدْنِي عِلْمًا وَهُدًى وَتَوْفِيقًا.}
+    \end{Arabic}
+
+  \end{minipage}
+  \end{center}
+\fi
+
+\vspace*{\fill}
+\clearpage
+
+\pagenumbering{roman}
+
+%==============================================================
+%  DEDICACE
+%==============================================================
+\chapter*{Dedication}
+\addcontentsline{toc}{chapter}{Dedication}
+\thispagestyle{plain}
+
+\begin{center}
+\vspace*{3cm}
+{
+\itshape\large
+To my family, for everything.\\[6pt]
+And especially to my mother,\\
+whose strength and kindness made me who I am,\\
+and whose memory stays with me always.\\[18pt]
+To my friends, who made the hard weeks lighter\\
+and reminded me there is life outside the screen.\\[18pt]
+To my academic supervisor, Mr.\ Mohsen Maraoui,\\
+my professional supervisors, Ms.\ Chaima Zaier\\
+and Ms.\ Nermine Baatout,\\
+for their guidance and availability.
+}
+
+\end{center}
+
+%==============================================================
+%  REMERCIEMENTS
+%==============================================================
+\chapter*{Acknowledgements}
+\addcontentsline{toc}{chapter}{Acknowledgements}
+\thispagestyle{plain}
+
+I would like to express my sincere gratitude to my academic supervisor, Mr.\ Mohsen Maraoui,
+Associate Professor at the Faculty of Sciences of Monastir, for his valuable advice,
+availability, and close follow-up throughout this project.
+
+I also thank Ms.\ Chaima Zaier, my professional supervisor at Proxym-IT, for her warm
+welcome, her trust, and the thoughtful guidance she provided during my internship.
+
+I extend my thanks to the entire Proxym-IT team for their support and collaborative spirit.
+
+Finally, I thank the jury members, Mr.\ Mohamed Neji Maatouk and Mr.\ Nizar Kerkeni, for the
+time they dedicated to evaluating this work.
+
+%==============================================================
+%  RESUME / ABSTRACT / KEYWORDS
+%==============================================================
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+\thispagestyle{plain}
+
+\noindent\textbf{Abstract.}\quad
+PayZo is a Tunisian digital-banking platform that unifies multi-bank account management and
+protects peer-to-peer transfers through a machine-learning fraud detection system. The platform
+is built on an N-tier architecture comprising a Spring Boot backend secured by Keycloak, a CBS
+simulator, a three-layer ML orchestrator, and the client and staff applications. The client
+side ships as a React web app and a React Native mobile app; the backoffice ships as an Electron
+desktop application. The detection model pairs a calibrated LightGBM primary scorer with a
+Random Forest fallback, trained on 500,000 synthetic transactions generated from per-user
+behavioural profiles, and reaches a PR-AUC of 0.90 on the test set. High-risk transactions are
+suspended and routed to an analyst review queue, so a human decides on every fraud alert.
+
+\vspace{6pt}
+\noindent\textbf{Keywords:} digital banking, fraud detection, machine learning, peer-to-peer
+transfer, Tunisia.
+
+%==============================================================
+%  TABLE OF CONTENTS / LIST OF FIGURES / LIST OF TABLES
+%==============================================================
+\tableofcontents
+
+\clearpage
+\addcontentsline{toc}{chapter}{List of Figures}
+\listoffigures
+
+\clearpage
+\addcontentsline{toc}{chapter}{List of Tables}
+\listoftables
+
+%==============================================================
+%  LIST OF ACRONYMS
+%==============================================================
+\chapter*{List of Acronyms}
+\addcontentsline{toc}{chapter}{List of Acronyms}
+\thispagestyle{plain}
+
+\begin{description}[leftmargin=3.2cm,labelindent=0pt,font=\bfseries,itemsep=2pt,parsep=0pt,topsep=2pt]
+  \item[2TUP] Two-Track Unified Process
+  \item[AML] Anti-Money Laundering
+  \item[API] Application Programming Interface
+  \item[APK] Android Application Package
+  \item[B2B] Business-to-Business
+  \item[BCT] Banque Centrale de Tunisie (Central Bank of Tunisia)
+  \item[CBS] Core Banking System
+  \item[CIN] Carte d'Identité Nationale (National Identity Card)
+  \item[CORS] Cross-Origin Resource Sharing
+  \item[DNN] Deep Neural Network
+  \item[JPA] Jakarta Persistence API
+  \item[JWK] JSON Web Key
+  \item[JWT] JSON Web Token
+  \item[ML] Machine Learning
+  \item[OAuth2] Open Authorization 2.0
+  \item[OTP] One-Time Password
+  \item[P2P] Peer-to-Peer
+  \item[PCA] Principal Component Analysis
+  \item[PFE] Projet de Fin d'Études (Final Year Project)
+  \item[PR-AUC] Precision--Recall Area Under the Curve
+  \item[RIB] Relevé d'Identité Bancaire (Bank Account Identifier)
+  \item[ROC-AUC] Receiver Operating Characteristic Area Under the Curve
+  \item[SMOTE] Synthetic Minority Over-sampling Technique
+  \item[SMS] Short Message Service
+  \item[UML] Unified Modeling Language
+  \item[UUID] Universally Unique Identifier
+\end{description}
+
+\clearpage
+\pagenumbering{arabic}
+
+%==============================================================
+%  GENERAL INTRODUCTION
+%==============================================================
+\chapter*{General Introduction}
+\addcontentsline{toc}{chapter}{General Introduction}
+\markboth{General Introduction}{}
+
+Tunisia's electronic payment landscape is changing fast. The Banque Centrale de Tunisie
+reports 27.9 billion dinars processed through digital channels in 2024 alone\webcite{web:bct1}{1}, and mobile
+payments grew 81\% in 2025\webcite{web:bct2}{2}. At the centre of that growth is peer-to-peer transfer: instant,
+convenient, and irreversible. The last property is also its biggest vulnerability. Once a
+fraudulent transfer executes, the funds are gone. Reversal is not a realistic option in a
+live banking environment.
+
+Fraud has kept pace with digitisation. Attackers now run automated pipelines and use
+generative AI tools to scale attacks that previously required human effort. The global cost of
+fraud exceeds \$400 billion annually\webcite{web:veriff}{3}, and AI-assisted fraud losses are projected to reach \$40
+billion by 2027\webcite{web:deloitte}{5}. Manual review cannot scale to meet that threat. A platform that wants to stay
+trusted has to answer automation with automation.
+
+PayZo was designed around that constraint. It is a Tunisian digital-banking platform that
+addresses two problems at once. The first is fragmentation: most clients hold accounts across
+multiple banks, but no single surface gives them a complete view of their funds. PayZo resolves
+this by connecting to a Core Banking System that aggregates account data across institutions.
+The second problem is fraud: every peer-to-peer transfer passes through a machine-learning
+scoring engine before the money moves, and transactions flagged as high risk are suspended
+pending analyst review. The two sides reinforce each other: a unified account view means
+the model sees the full picture of a client's activity, not just one bank's slice of it.
+
+The project was carried out at Proxym-IT, a Tunisian software company based in Sousse that
+builds digital products for the banking and financial sector. Its flagship platform, Bankerise,
+provided the professional context and the technical environment for the work.
+
+The development followed the 2TUP (Two-Track Unified Process) methodology. Two parallel
+tracks, one functional and one technical, converged into a single realisation phase. The
+functional track defined the actors, use cases, and interaction flows. The technical track
+determined the architecture, the technology choices, and the infrastructure. Both tracks had
+to advance together on a 14-week, single-developer schedule, and 2TUP's Y-shape fits that
+constraint: it forces the design work to happen before the build work, without separating the
+two so far that they drift.
+
+This report documents the project from first principles to deployed system. Chapter 1 frames
+the problem and the solution. Chapter 2 defines the actors and their requirements. Chapter 3
+covers the architecture and the design. Chapter 4 builds the fraud-detection model step by
+step, from the training data to the final three-layer orchestrator. Chapter 5 presents the
+working system, its development environment, the implementation across its client and staff
+interfaces, and the test results.
+
+%==============================================================
+%  CHAPTER 1 — GENERAL CONTEXT
+%==============================================================
+\chapter{General Context}
+\label{chap:context}
+
+\section{Introduction}
+
+In this chapter, we introduce PayZo, the project Mohamed Ben Salem developed under
+the supervision of Mr.\ Mohsen Maraoui. It opens with the problematic, examines what
+existing solutions offer and where they fall short, then presents PayZo's answer. It ends
+with the method and how the work was planned.
+
+\section{Project framing}
+
+Before we go any further, this section identifies the project on both its academic and its
+industrial side. Table~\ref{tab:project-id} sums it up.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Field} & \textbf{Value} \\
+\hline
+Project title & PayZo \\
+\hline
+Type & Full-stack final-year project (PFE) \\
+\hline
+Domain & Digital banking, fraud detection, machine learning \\
+\hline
+Host organisation & Proxym-IT (Sousse, Tunisia) \\
+\hline
+Faculty & Faculty of Sciences of Monastir \\
+\hline
+Degree & Bachelor's Degree in Software Engineering and Information Systems \\
+\hline
+Academic year & 2025--2026 \\
+\hline
+Duration & 14 weeks \\
+\hline
+Student & Mohamed Ben Salem \\
+\hline
+Academic supervisor & Mr.\ Mohsen Maraoui \\
+\hline
+Professional supervisor & Ms.\ Chaima Zaier (Proxym-IT) \\
+\hline
+\end{tabular}
+\caption{Project identification}
+\label{tab:project-id}
+\end{table}
+
+Proxym-IT, founded in 2006 and based in Sousse, is a Tunisian software company that builds
+digital products for banks, insurers, and microfinance institutions. Its flagship product,
+Bankerise, is an omnichannel banking platform. Hosting PayZo at Proxym-IT places the
+project inside an organisation that builds banking software for a living.
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=1.5cm]{proxym.png}
+\caption{Proxym-IT: host organisation}
+\label{fig:proxym-logo}
+\end{figure}
+
+\section{Problematic}
+
+Cash is losing ground in Tunisia. Electronic transactions hit 27.9 billion dinars in 2024
+(+10.6\%), and mobile payments rose 81\% in 2025 according to the Banque Centrale de
+Tunisie\webcite{web:bct1}{1}\webcite{web:bct2}{2}. About half of that is peer-to-peer
+transfer. The mode is taking off because it is instant and irreversible; the same two
+properties also make it a target.
+
+The global picture puts the stakes in perspective. Fraud losses exceed \$400 billion
+annually (Veriff\,/\,TechRadar)\webcite{web:veriff}{3}. Deepfake fraud incidents rose over
+3,000\% in a single year (VentureBeat\,/\,Deloitte)\webcite{web:deepfake}{4}. Losses driven
+by generative AI tools stood at \$12.3 billion in 2023 and are projected to reach \$40
+billion by 2027, according to the Deloitte Center for Financial
+Services\webcite{web:deloitte}{5}.
+
+Fraud has industrialised in step with that growth. Attackers run automated pipelines with
+AI assistance; one script can hit thousands of accounts at once. Manual review cannot keep
+that pace, and the math is one-sided: defenders have to be right every time, an attacker
+only needs to win once. If trust slips, users fall back to cash and the whole digitalisation
+effort gets wasted. We now look at what existing platforms offer against this backdrop.
+
+
+\section{Study of the existing}
+
+\subsection{Existing solutions}
+
+Four representative products were chosen to cover the existing space around PayZo: two
+consumer apps (N26\webcite{web:n26}{12}, Emma\webcite{web:emma}{13}) and two B2B platforms
+(Feedzai\webcite{web:feedzai}{14}, Plaid\webcite{web:plaid}{15}). Each one is strong
+on some capabilities and absent on others. The list below names what they share and who
+delivers each piece.
+
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Real-time ML scoring.} N26, Feedzai, and Plaid each run dedicated fraud-scoring engines.
+  \item \textbf{Multi-bank account.} Emma aggregates accounts across 50+ UK banks.
+  \item \textbf{Analyst case-management queues.} Feedzai and N26 both operate flagged-transaction review workflows.
+  \item \textbf{Cross-institution fraud signals.} Feedzai and Plaid pool signals across their client networks.
+  \item \textbf{Real-time notifications.} N26 and Emma notify users on every transaction but not on frauds.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=1.1cm]{N26.png}\hspace{1.4cm}%
+\includegraphics[height=1.0cm]{emma.png}\hspace{1.4cm}%
+\includegraphics[height=1.1cm]{feedzai.png}\hspace{1.4cm}%
+\includegraphics[height=1.1cm]{plaid.png}
+\caption{Reviewed existing solutions: N26, Emma, Feedzai, and Plaid}
+\label{fig:solutions-logos}
+\end{figure}
+
+\subsection{Comparative study}
+
+Table~\ref{tab:capability} compares the four existing systems and PayZo across seven
+capabilities \\
+(\yes~documented; \no~absent by design; \partialmark~partial or undisclosed).
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+\textbf{Capability} & \textbf{N26} & \textbf{Emma} & \textbf{Feedzai} & \textbf{Plaid} & \textbf{PayZo} \\
+\hline
+Client banking app        & \yes & \yes & \no  & \no  & \yes \\
+\hline
+Unified multi-bank view   & \no  & \yes & \no  & \no  & \yes \\
+\hline
+Cross-bank transfers      & \yes & \yes & \no  & \no  & \yes \\
+\hline
+ML fraud detection        & \yes & \no  & \yes & \yes & \yes \\
+\hline
+Cross-bank fraud scoring  & \no  & \no  & \partialmark & \partialmark & \yes \\
+\hline
+Fraud-specific alerts     & \partialmark & \no  & \partialmark & \no  & \yes \\
+\hline
+Analyst review queue      & \yes & \no  & \yes & \partialmark & \yes \\
+\hline
+\end{tabular}
+\caption{Capability comparison}
+\label{tab:capability}
+\end{table}
+
+None of them combine all seven capabilities in one place. The next section presents the answer to that gap.
+
+\section{Proposed solution}
+
+A problem like this has to be attacked at the root first, then on the active side. Otherwise
+the defender is always one step behind.
+
+PayZo's root fix removes the fragmentation. The platform sits on top of a Core Banking
+System (CBS) and brings a person's accounts across banks into a single layer, so the system
+has a complete picture of all the client's activity, so fraud cannot slip into any of the blind
+spots between banks.
+
+The active layer answers automation with automation. A machine-learning service scores
+every peer-to-peer transfer before the money moves, and flagged cases go to a human analyst
+to take the final decision.
+
+Every operation is built to feel easy and direct. Whether on the client side or the backoffice,
+the experience must remain simple and frictionless. Figure~\ref{fig:payzo-logo} shows the
+PayZo brand identity.
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=4.5cm]{payzo.png}
+\caption{PayZo: proposed solution}
+\label{fig:payzo-logo}
+\end{figure}
+
+\section{Development methodology (2TUP)}
+
+The project follows 2TUP (Two-Track Unified Process)~[13], a Y-shaped process shown in Figure~\ref{fig:2tup}. A preliminary study establishes initial scope and vision; then two parallel tracks diverge: the functional track covers requirements and use cases, while the technical track covers architecture and the technology stack. The two branches converge in a single design-and-realisation phase. This shape fits a solo full-stack project, where understanding what to build and how to build it must advance in parallel.
+
+% figure numbering continues naturally from logos above
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{2TUP.png}
+\caption{2TUP Y-process}
+\label{fig:2tup}
+\end{figure}
+
+\section{Project planning (Gantt)}
+
+The work is laid out in Figure~\ref{fig:gantt}. The phases build on each other, from study
+and requirements at the start to testing and writing at the end. The schedule reflects real
+constraints: 14 weeks of calendar and one developer.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{Gantt.png}
+\caption{Gantt chart}
+\label{fig:gantt}
+\end{figure}
+
+\section{Conclusion}
+
+This chapter framed the project and the fraud problem it answers. PayZo's response is a
+root fix that unifies accounts across banks plus an active ML layer that scores transfers in
+real time, both built around the same easy, direct experience for client and staff. The work
+follows a 2TUP methodology over a 14-week solo schedule. The next chapter turns this
+positioning into concrete actors and requirements.
+
+%==============================================================
+%  CHAPTER 2 — REQUIREMENTS ANALYSIS & SPECIFICATION
+%==============================================================
+\chapter{Requirements Analysis \& Specification}
+\label{chap:requirements}
+
+\section{Introduction}
+
+In this chapter, we cross from the project's positioning into its precise specification. Here
+we define what PayZo has to do, for whom, and how well. We open by identifying the actors
+who use the system, then define its functional and non-functional requirements, and close
+with the global use case diagram followed by a refinement of the most important use cases.
+
+\section{Actors identification}
+
+PayZo distinguishes five actors. Four are internal users of the platform; the fifth is the
+CBS, an external system the platform depends on for all account and balance data.
+Table~\ref{tab:actors} lists them.
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{|l|l|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Actor} & \textbf{Type} & \textbf{Role} \\
+\hline
+Client     & Internal, end user  & Uses the platform to view accounts, move money, and manage their banking activity \\
+\hline
+Admin      & Internal, backoffice & Manages client access by reviewing registrations and handling account restrictions \\
+\hline
+Analyst    & Internal, backoffice & Reviews flagged transactions and evaluates the fraud detection system \\
+\hline
+SuperAdmin & Internal, backoffice & Controls staff accounts, the ML model configuration, and the bank catalogue \\
+\hline
+CBS        & External system        & The external backbone PayZo syncs with to maintain a unified account view across all banks \\
+\hline
+\end{tabularx}
+\caption{Actors}
+\label{tab:actors}
+\end{table}
+
+The four internal actors share a single \texttt{users} table in the database. The \texttt{role}
+column acts as the JPA discriminator. The CBS runs outside the platform; PayZo reads from
+and writes to it on every account operation.
+
+\section{Requirements analysis}
+
+With the actors identified, this section defines what each one needs the system to do and the
+constraints it operates under. PayZo runs across two interfaces: a client app where users
+manage accounts and move money, and a backoffice where staff keep the platform in check.
+Both sides are covered below.
+
+\subsection{Functional requirements}
+
+PayZo's features divide naturally along role lines. The requirements below capture what each
+actor can do within their scope.
+
+\vspace{4pt}\noindent\textbf{Client}\par\nopagebreak
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Registration.} The client submits their CIN; the system previews the matching
+        CBS record; after OTP verification the account waits for admin approval.
+  \item \textbf{Authentication.} Log in with credentials and confirm via an OTP channel; first
+        login triggers a forced password change.
+  \item \textbf{Account overview.} View all linked accounts across banks with their current
+        balance.
+  \item \textbf{Transaction history.} Browse the paginated transaction history for each account.
+  \item \textbf{Peer transfer.} Initiate a transfer via a saved beneficiary, @username, or
+        manual RIB and name; confirm with OTP; the ML service scores the transaction before
+        it executes.
+  \item \textbf{Own-account transfer.} Move funds between the client's own accounts across
+        banks; no OTP or ML scoring required.
+  \item \textbf{Beneficiary management.} Save, rename, mark as favourite, and delete recipients
+        keyed by RIB.
+  \item \textbf{Pre-transfer assist.} Resolve a RIB, verify a recipient's name, or look up a
+        PayZo username before submitting a transfer.
+  \item \textbf{Profile management.} Edit profile picture, edit @username, set a default account, and reset the
+        password from within the profile.
+  \item \textbf{Notifications.} Receive in-app and email notifications for key account events.
+\end{itemize}
+
+\vspace{4pt}\noindent\textbf{Admin}\par\nopagebreak
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Client registration.} Approve or reject pending client registrations, or
+        directly register a client from an existing CBS record, skipping the approval queue.
+  \item \textbf{Client management.} View client profile and transaction history; block or
+        unblock access.
+\end{itemize}
+\newpage
+\vspace{4pt}\noindent\textbf{Analyst}\par\nopagebreak
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Fraud alert review.} Approve or reject suspended transactions flagged by the
+        ML scoring.
+  \item \textbf{ML threshold proposal.} Propose changes to the fraud scoring thresholds for
+        SuperAdmin review.
+  \item \textbf{ML model monitoring.} View the active model layer and the current configuration.
+\end{itemize}
+
+\vspace{4pt}\noindent\textbf{SuperAdmin}\par\nopagebreak
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Staff management.} Create and disable Admin and Analyst accounts.
+  \item \textbf{ML configuration.} Review and apply analyst threshold proposals; monitor the
+        active layer.
+  \item \textbf{Bank management.} Activate or deactivate banks, trigger a CBS sync, and upload
+        a bank logo.
+  \item \textbf{Audit log.} View a full log of system actions.
+\end{itemize}
+\newpage
+\subsection{Non-functional requirements}
+
+Beyond the features, several system-level constraints shape how PayZo must behave. Security
+is the most critical: the platform handles real money and must reject a compromised account
+on every request. Table~\ref{tab:nfr} covers the full set.
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{|>{\bfseries\raggedright\arraybackslash}p{3.1cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Category} & \textbf{Requirement} & \textbf{Mechanism} \\
+\hline
+Security & Sessions are stateless; every request carries a JWT decoded against the issuing realm; roles from \texttt{realm\_access.roles} control route access at the filter chain level; blocked accounts are rejected immediately with 403; CORS is locked to the two frontend origins & OAuth2 resource server; \texttt{JwtIssuerAuthentication\allowbreak ManagerResolver} with one decoder per realm (\texttt{clients} / \texttt{backoffice}); \texttt{@EnableMethodSecurity}; \texttt{BlockedUserFilter} running after token validation, backed by a 30s Caffeine cache (up to 10,000 entries); CORS allowlist \texttt{:5173} / \texttt{:5174} \\
+\hline
+Authentication integrity & OTP is 6 digits, valid for 5 minutes, invalidated after 3 failed attempts; resend locked for 60 seconds & \texttt{SecureRandom}; \texttt{OtpService} \\
+\hline
+Data integrity & All IDs are UUID; money is \texttt{BigDecimal}; account numbers follow the 20-digit Tunisian RIB format (mod-97) & Enforced at the entity and service layers \\
+\hline
+Reliability & ML scoring degrades through three layers; bank sync retries until CBS is reachable; failed notifications retry up to three times & \texttt{MlIntegrationService}; \texttt{BankSyncBootstrap}; \texttt{@Scheduled} retry \\
+\hline
+Auditability & Key actions are recorded with actor, timestamp, and outcome & \texttt{audit\_logs} table \\
+\hline
+Performance & Notifications never block the API thread; user-status checks avoid per-request database hits & \texttt{@Async} dispatch; Caffeine cache \\
+\hline
+\end{tabularx}
+\caption{Non-functional requirements}
+\label{tab:nfr}
+\end{table}
+
+\section{Global use case diagram}
+
+Figure~\ref{fig:uc-global} maps each actor to the use cases they own. The CBS sits on the
+system boundary as the external data source every account operation passes through.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.03\linewidth]{GlobalUseCase.png}
+\caption{Global use case diagram}
+\label{fig:uc-global}
+\end{figure}
+
+\section{Detailed use cases}
+
+The global diagram gives the overall picture. The subsections below break it down by role,
+with refinement tables on the flows that matter most to the project.
+
+\subsection{Client}
+
+The client interacts with the widest set of use cases, shown in Figure~\ref{fig:uc-client}. Two flows are refined: registration,
+which governs how a new user enters the platform, and peer transfer, which is the operational
+core the fraud detection system is built around. The detailed interaction sequences for these
+two flows are shown in Figure~\ref{fig:seq-registration}
+(p.\,\pageref{fig:seq-registration}) and Figure~\ref{fig:seq-transfer}
+(p.\,\pageref{fig:seq-transfer}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.05\linewidth]{UseCaseClient.png}
+\caption{Client use case diagram}
+\label{fig:uc-client}
+\end{figure}
+\newpage
+\noindent\textbf{Registration}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\linewidth}{|>{\bfseries}p{2.8cm}|>{\raggedright\arraybackslash}X|}
+\hline
+Actors & Client, Admin, CBS \\
+\hline
+Preconditions & CIN not already registered; CBS holds a matching client record \\
+\hline
+Main flow & 1. Client submits CIN. 2. System fetches and previews the matching CBS record. 3. Client sets a password. 4. System sends an OTP. 5. Client verifies the OTP. 6. Account is created with status PENDING\_APPROVAL. 7. Admin reviews and approves. 8. Client receives a confirmation and logs in. 9. System forces a password change on first login. \\
+\hline
+Exceptions & CIN already registered $\rightarrow$ 409. OTP expired or max attempts reached $\rightarrow$ invalidated; client must resend. Admin rejects $\rightarrow$ account set to REJECTED; client notified. \\
+\hline
+Postconditions & Client account is ACTIVE in PayZo and provisioned in Keycloak. \\
+\hline
+\end{tabularx}
+\caption{Use case: Registration}
+\label{tab:uc-registration}
+\end{table}
+
+\noindent\textbf{Peer transfer}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\linewidth}{|>{\bfseries}p{2.8cm}|>{\raggedright\arraybackslash}X|}
+\hline
+Actors & Client, CBS, ML service \\
+\hline
+Preconditions & Client is ACTIVE; source bank is active; no in-progress transfer exists \\
+\hline
+Main flow & 1. Client selects a recipient (saved beneficiary, @username, or manual RIB and name). 2. System validates the RIB (mod-97) and verifies the recipient's name against CBS. 3. System checks the destination bank is registered and active. 4. System verifies the CBS balance covers the amount. 5. Transaction is created with status PENDING\_OTP. 6. System sends an OTP. 7. Client confirms with the OTP. 8. ML service scores the transaction. 9. LOW: system executes in CBS, status $\rightarrow$ APPROVED. MED/HIGH: fraud alert created, status $\rightarrow$ SUSPENDED\_PENDING\_ANALYST. \\
+\hline
+Exceptions & NAME\_MISMATCH $\rightarrow$ 400. BANK\_INACTIVE $\rightarrow$ 400. Insufficient balance $\rightarrow$ 400. Self-transfer $\rightarrow$ 400. Concurrent in-progress transfer $\rightarrow$ 409. \\
+\hline
+Postconditions & Transaction APPROVED and committed in CBS (LOW), or SUSPENDED with a fraud alert awaiting analyst review (MED/HIGH). Sender and receiver notified. \\
+\hline
+\end{tabularx}
+\caption{Use case: Peer transfer}
+\label{tab:uc-transfer}
+\end{table}
+
+\subsection{Admin}
+
+The admin's use cases, shown in Figure~\ref{fig:uc-admin}, centre on the client lifecycle: who gets in and who keeps access. The
+corresponding sequence is shown in Figure~\ref{fig:seq-approval}
+(p.\,\pageref{fig:seq-approval}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\linewidth]{UseCaseAdmin.png}
+\caption{Admin use case diagram}
+\label{fig:uc-admin}
+\end{figure}
+
+\noindent\textbf{Registration approval}
+
+\begin{table}[H]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{|>{\bfseries}p{2.8cm}|>{\raggedright\arraybackslash}X|}
+\hline
+Actors & Admin, Client \\
+\hline
+Preconditions & A client account is in PENDING\_APPROVAL status \\
+\hline
+Main flow & 1. Admin opens the pending queue and reviews the CBS-fetched data. 2. Admin approves or rejects with a reason. 3. System updates the status and notifies the client. \\
+\hline
+Exceptions & Client cancels before review $\rightarrow$ removed from queue. \\
+\hline
+Postconditions & Client status is ACTIVE (approved) or REJECTED. Audit log entry created. \\
+\hline
+\end{tabularx}
+\caption{Use case: Registration approval}
+\label{tab:uc-reg-approval}
+\end{table}
+
+\noindent\textbf{Direct registration}
+
+\begin{table}[H]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{|>{\bfseries}p{2.8cm}|>{\raggedright\arraybackslash}X|}
+\hline
+Actors & Admin, CBS \\
+\hline
+Preconditions & CIN exists in CBS and is not already registered in PayZo \\
+\hline
+Main flow & 1. Admin enters a CIN; system previews the CBS record. 2. Admin confirms. 3. System provisions Keycloak and creates the client directly as ACTIVE, bypassing the approval queue. 4. System emails the username and a temporary password; first login forces a password change. \\
+\hline
+Exceptions & CIN already registered $\rightarrow$ 409. CIN not found in CBS $\rightarrow$ 404. \\
+\hline
+Postconditions & Client is ACTIVE and provisioned in Keycloak without passing through the pending queue. Audit log entry created. \\
+\hline
+\end{tabularx}
+\caption{Use case: Direct registration}
+\label{tab:uc-direct-reg}
+\end{table}
+\newpage
+\subsection{Analyst}
+
+The analyst sits at the intersection of the automated and the human (Figure~\ref{fig:uc-analyst}): the ML model flags, the
+analyst decides. The corresponding sequence is shown in Figure~\ref{fig:seq-alert}
+(p.\,\pageref{fig:seq-alert}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{UseCaseAnalyst.png}
+\caption{Analyst use case diagram}
+\label{fig:uc-analyst}
+\end{figure}
+
+\noindent\textbf{Fraud alert review}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{|>{\bfseries}p{2.8cm}|>{\raggedright\arraybackslash}X|}
+\hline
+Actors & Analyst, CBS \\
+\hline
+Preconditions & A fraud alert exists in PENDING status; associated transaction is SUSPENDED\_PENDING\_ANALYST \\
+\hline
+Main flow & 1. Analyst opens the fraud alert queue. 2. Analyst reviews the ML score, transaction details, and sender and receiver profiles. 3. Analyst approves: system executes the transfer in CBS, transaction $\rightarrow$ APPROVED. Analyst rejects: funds not moved, transaction $\rightarrow$ REJECTED. 4. System notifies the client. \\
+\hline
+Exceptions & CBS unreachable on approval $\rightarrow$ alert stays open; analyst retries. \\
+\hline
+Postconditions & Transaction is APPROVED or REJECTED. Fraud alert closed. Client notified. \\
+\hline
+\end{tabularx}
+\caption{Use case: Fraud alert review}
+\label{tab:uc-fraud-review}
+\end{table}
+\newpage
+\subsection{SuperAdmin}
+
+The SuperAdmin, whose use cases appear in Figure~\ref{fig:uc-superadmin}, controls who works on the platform, how the model behaves, and which banks
+are active. The corresponding sequence is shown in Figure~\ref{fig:seq-superadmin}
+(p.\,\pageref{fig:seq-superadmin}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{UseCaseSuperAdmin.png}
+\caption{SuperAdmin use case diagram}
+\label{fig:uc-superadmin}
+\end{figure}
+
+
+\noindent\textbf{Staff management}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\linewidth}{|>{\bfseries}p{2.8cm}|>{\raggedright\arraybackslash}X|}
+\hline
+Actors & SuperAdmin \\
+\hline
+Preconditions & SuperAdmin is authenticated via the backoffice Keycloak realm \\
+\hline
+Main flow & 1. SuperAdmin opens the staff management page. 2. \textit{Create:} opens the dedicated page for the target role (Admin or Analyst), enters email, first name, last name, phone number, date of birth, governorate, and address; system provisions the account in Keycloak and creates the \texttt{User} row. 3. \textit{Edit:} updates an existing staff member's profile fields. 4. \textit{Block:} selects an active staff account and confirms; system sets status to BLOCKED and evicts the \texttt{BlockedUserFilter} cache. 5. \textit{Unblock:} reverses a block; system sets status back to ACTIVE. 6. \textit{Delete:} removes a staff account from Keycloak and marks the \texttt{User} row as deleted. 7. System records every action in \texttt{audit\_logs}. \\
+\hline
+Exceptions & Email already registered $\rightarrow$ 409. Cannot block/delete own account $\rightarrow$ 403. \\
+\hline
+Postconditions & Staff account created, updated, blocked, unblocked, or deleted. Audit log entry created. \\
+\hline
+\end{tabularx}
+\caption{Use case: Staff management}
+\label{tab:uc-staff-mgmt}
+\end{table}
+
+\newpage
+\noindent\textbf{ML threshold management}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{|>{\bfseries}p{2.8cm}|>{\raggedright\arraybackslash}X|}
+\hline
+Actors & SuperAdmin, Analyst \\
+\hline
+Preconditions & SuperAdmin is authenticated; an analyst threshold report may or may not exist \\
+\hline
+Main flow & 1. An analyst submits a threshold report; the system delivers it to the SuperAdmin as a notification. 2. SuperAdmin reads the report and the analyst's justification. 3. If the SuperAdmin decides to act, they open the ML configuration page and manually enter the new \texttt{allow\_max} and \texttt{block\_min} values. 4. System updates \texttt{ml\_model\_config} with the new thresholds. 5. System records the action in \texttt{audit\_logs}. \\
+\hline
+Exceptions & Invalid threshold values $\rightarrow$ 400. \\
+\hline
+Postconditions & Thresholds updated in \texttt{ml\_model\_config} if the SuperAdmin chose to apply. Audit log entry created. \\
+\hline
+\end{tabularx}
+\caption{Use case: ML threshold management}
+\label{tab:uc-ml-threshold}
+\end{table}
+
+\section{Conclusion}
+
+This chapter laid out the specification layer between the project's positioning and its
+implementation. The actors are identified, their requirements mapped, and the use case
+diagrams give a concrete picture of who does what and under which conditions. Two flows
+form the thesis centrepiece: the peer transfer pipeline, where every transaction
+passes through the ML scoring layer before it executes, and the fraud alert review, where a
+human analyst makes the final call on what the model could not. Chapter 3 takes this
+specification and turns it into a concrete architecture and implementation.
+
+%==============================================================
+%  CHAPTER 3 — DESIGN
+%==============================================================
+\chapter{Design}
+\label{chap:design}
+
+\section{Introduction}
+
+In this chapter, we move from specification to structure. The requirements defined in
+Chapter 2 now take shape as architecture and design decisions. We open with the overall
+system architecture, then cover the class model and the main interaction sequences.
+
+\section{System architecture}
+
+PayZo follows a layered N-tier architecture, shown in Figure~\ref{fig:sysarch}.
+
+The presentation layer holds the client mobile app and the backoffice desktop application.
+Both authenticate through Keycloak, which runs two separate realms: one for clients, one for
+backoffice staff. The application layer is a single Spring Boot service whose logic is split
+across five modules: identity and access, transaction processing, bank synchronisation,
+notification delivery, and fraud scoring. The data layer holds all persistent state in
+PostgreSQL; the CBS runs as a separate data source for the bank catalogue and account
+information. Outbound calls go to the ML service for fraud scoring and to external email and
+SMS providers for notifications. At the edge, an Nginx reverse proxy fronts the stack on
+port~80, routing client traffic to the frontend and API calls to the Spring Boot backend.\\
+
+The same figure also previews the concrete deployment of the platform. The technology behind
+each component is detailed in Chapter~5 (Table~\ref{tab:tech}), and the runtime environment is
+described in Section~\ref{sec:deployment}.
+
+\begin{landscape}
+\thispagestyle{plain}
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{SysArchitecture.png}
+\caption{Full system architecture}
+\label{fig:sysarch}
+\end{figure}
+\end{landscape}
+
+\section{Detailed design}
+
+\subsection{Class diagram}
+
+Figure~\ref{fig:class-cbs} shows the CBS domain model. \texttt{CbsBank} holds the bank
+catalogue PayZo syncs against; \texttt{CbsClient} and \texttt{CbsAccount} carry client identity
+and account balances; \texttt{CbsTransaction} logs every debit and credit.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\linewidth]{ClassCBS.png}
+\caption{CBS class diagram}
+\label{fig:class-cbs}
+\end{figure}
+
+Figure~\ref{fig:class-payzo} shows the PayZo domain model. \texttt{User} is the root of a
+single-table inheritance hierarchy; the \texttt{role} column determines whether a row is a
+Client, Admin, Analyst, or SuperAdmin. Clients carry extra fields, including a trust score the
+fraud engine reads when scoring a transfer. When the ML service returns medium or high risk, a
+\texttt{Transaction} links to a \texttt{FraudAlert} and the analyst approves or rejects from
+there. \texttt{OtpToken} stores the 6-digit code, its purpose, and its expiry. \texttt{Bank}
+is PayZo's opt-in registry over the CBS catalogue; \texttt{MlModelConfig} is a singleton row
+with the active thresholds, while \texttt{MlThresholdReport} records an analyst's proposed
+threshold change, with its justification and review status, awaiting SuperAdmin approval.
+\texttt{Beneficiary} stores saved recipients by RIB; \texttt{UserNotification} backs the
+in-app notification bell and \texttt{Notification} logs every outbound email and SMS;
+\texttt{AuditLog} tracks key actions across all roles.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.05\linewidth]{ClassPayZo.png}
+\caption{PayZo class diagram}
+\label{fig:class-payzo}
+\end{figure}
+
+\newpage
+
+\subsection{Sequence diagrams}
+
+The following diagrams trace the seven main flows of the platform, spanning both the client
+app and the backoffice: registration, login, forgot password, registration approval, peer
+transfer, fraud alert review, and SuperAdmin operations.\\
+
+\noindent\textbf{Registration.} The client submits their CIN; the backend fetches the matching
+record from the CBS and previews it. After OTP verification the account is created with status
+PENDING\_APPROVAL, where it waits for admin review.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{SeqRegistration.png}
+\caption{Registration sequence}
+\label{fig:seq-registration}
+\end{figure}
+
+\newpage
+
+\noindent\textbf{Login.} The client submits credentials to the authentication service; on
+success the backend sends an OTP to the registered channel. The session is confirmed after
+OTP verification. A first-login flag triggers a forced password change before the client
+reaches the main app.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.1\linewidth]{SeqLogin.png}
+\caption{Login sequence}
+\label{fig:seq-login}
+\end{figure}
+
+\newpage
+
+\noindent\textbf{Forgot password.} The client identifies themselves by CIN or email, receives
+an OTP, verifies it, and sets a new password. The flow runs across three pages without
+requiring an active session.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{SeqForgot.png}
+\caption{Forgot password sequence}
+\label{fig:seq-forgot}
+\end{figure}
+
+\newpage
+
+\noindent\textbf{Registration approval.} The admin opens the pending registrations queue,
+reviews the CBS-fetched client data, and approves or rejects. On approval the account moves to
+ACTIVE and the client is notified.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.1\linewidth]{SeqApproval.png}
+\caption{Registration approval sequence}
+\label{fig:seq-approval}
+\end{figure}
+
+\newpage
+
+\noindent\textbf{Peer transfer.} The client selects a recipient. The backend accepts three
+forms: a saved beneficiary, a @username, or a manual RIB with name. It validates the RIB,
+verifies the recipient name against the CBS, confirms the destination bank is active, and
+checks the balance covers the amount. The transaction is created with status PENDING\_OTP and
+an OTP is sent. On confirmation the ML service scores the transfer: a LOW result executes in
+the CBS and moves the transaction to APPROVED; a MED or HIGH result raises a fraud alert and
+suspends the transfer pending analyst review.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.1\linewidth]{SeqTransfer.png}
+\caption{Peer transfer sequence}
+\label{fig:seq-transfer}
+\end{figure}
+
+\newpage
+
+\noindent\textbf{Fraud alert review.} The analyst reviews the ML score alongside the
+transaction and sender details. Approval triggers CBS execution and moves the transaction to
+APPROVED; rejection closes the alert without moving funds.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{SeqAlert.png}
+\caption{Fraud alert review sequence}
+\label{fig:seq-alert}
+\end{figure}
+
+\newpage
+
+\noindent\textbf{SuperAdmin actions.} The diagram covers the main SuperAdmin operations. To
+manage staff, the SuperAdmin creates or disables Admin and Analyst accounts. To control client
+access, the SuperAdmin blocks or unblocks a client account. To update scoring behaviour, the
+SuperAdmin reviews a pending analyst threshold proposal and applies or rejects it, which
+updates \texttt{MlModelConfig} directly.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{SeqSuperAdmin.png}
+\caption{SuperAdmin sequence}
+\label{fig:seq-superadmin}
+\end{figure}
+
+\section{Conclusion}
+
+This chapter translated the project's requirements into a concrete design. The N-tier
+architecture shows how the platform's services are organised and how they connect. The class
+diagrams cover the domain model on both the PayZo and CBS sides. The sequence diagrams trace
+the main flows, from registration and authentication through to the transfer pipeline the fraud
+detection system is built around.
+Chapter 4 examines that fraud detection system in depth.
+
+%==============================================================
+%  CHAPTER 4 — FRAUD-DETECTION ML System
+%==============================================================
+\chapter{Fraud-Detection ML System}
+\label{chap:ml}
+
+\section{Introduction}
+
+In this chapter, we examine the machine learning system behind PayZo's fraud detection. The
+previous chapter defined the architecture and the flows; this one goes inside the scoring
+engine that sits at the centre of the transfer pipeline. Every peer-to-peer transfer passes
+through it before the money moves, making it the core technical challenge of the project. We
+open by surveying existing models and datasets, then cover the feature design, the data
+generation, the algorithm evaluation, and the final integrated model.
+
+\section{Existing models and datasets}
+
+We reviewed public datasets and open-source models before committing to building our own.
+
+\vspace{4pt}\noindent\textbf{Datasets.} Three widely-used fraud benchmarks were examined,
+summarised in Table~\ref{tab:datasets}.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{|>{\raggedright\arraybackslash}p{2.5cm}|>{\raggedright\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Dataset} & \textbf{Domain} & \textbf{Key features} & \textbf{Why not adopted} \\
+\hline
+PaySim (Kaggle)\webcite{web:paysim}{6} & Mobile money transfers & Transaction type, amount, old/new balance & 6 flat columns; no behavioural history, no trust score, no geographic signal \\
+\hline
+IEEE-CIS Fraud Detection (Kaggle)\webcite{web:ieeecis}{7} & E-commerce card transactions & Device fingerprint, browser, email domain, identity fields & Card-not-present domain; no feature maps to a P2P bank transfer \\
+\hline
+Credit Card Fraud, ULB (Kaggle)\webcite{web:ulb}{8} & Card transactions & PCA-anonymised V1--V28, Amount, Time & Features are opaque and non-extensible; cannot align with the PayZo data model \\
+\hline
+\end{tabularx}
+\caption{Public fraud datasets reviewed}
+\label{tab:datasets}
+\end{table}
+\newpage
+\vspace{4pt}\noindent\textbf{Evaluated models.} Three open repositories were tested directly,
+listed in Table~\ref{tab:repos}.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{|>{\raggedright\arraybackslash}p{4.0cm}|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Repository} & \textbf{Approach} & \textbf{Why not adopted} \\
+\hline
+Jube (aml-fraud-transaction-monitoring)\webcite{web:jube}{9} & Rule-based AML monitoring engine & Not designed for inline per-transfer classification \\
+\hline
+HuggingFace, vaibhav07112004 (95.7\% acc.)\webcite{web:hf}{10} & Classifier trained on credit card data & Accuracy misleads on imbalanced data; feature contract does not match PayZo's signals \\
+\hline
+sergio11/\allowbreak online\_payment\_fraud\webcite{web:sergio}{11} & Custom DNN & Different domain and feature set; not integrable into the PayZo pipeline \\
+\hline
+\end{tabularx}
+\caption{Open-source fraud models evaluated}
+\label{tab:repos}
+\end{table}
+
+The pattern is the same across all six: wrong domain, wrong features, or both. None of them
+expose the signals this system runs on.
+
+\section{Feature engineering}
+
+The model scores a transfer on two levels: how it compares to the general population, and how
+it compares to this specific sender's own history. The second level is the design choice the
+datasets in the previous section could not support.
+
+Twenty-four features, listed in Table~\ref{tab:features}, are grouped into four categories.
+
+Three of the four groups (transaction, velocity, and trust \& relationship) sit at the
+population level; the fourth, per-user norm, is computed against the sender's own history.
+
+Fraud is relative to the sender. A large overnight transfer is routine for some users and
+suspicious for others. The per-user norm features encode each transaction against the sender's
+own 30-day history rather than against a population threshold.
+
+The payoff is measurable. An earlier iteration of the model, built before this per-user layer
+existed, plateaued at a validation PR-AUC of about 0.67: with only population-level signals it
+could not separate a transfer that is out of character for a given sender from one that is
+merely large. Introducing the per-user behavioural profiles and the eight per-user-norm
+features raised validation PR-AUC to about 0.9 --- the single largest
+gain in the project, and the empirical justification for the per-user design.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\linewidth}{|>{\raggedright\arraybackslash}p{1.9cm}|>{\raggedright\arraybackslash}p{5.5cm}|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Group} & \textbf{Feature} & \textbf{Description} \\
+\hline
+\multirow{6}{*}{Transaction} & log\_amount & Log-transformed transfer amount \\
+\cline{2-3}
+ & amount\_to\_balance\_ratio & Amount relative to source account balance \\
+\cline{2-3}
+ & is\_balance\_zero\_receiver & Destination account has zero balance \\
+\cline{2-3}
+ & distance\_km & Haversine distance between sender and receiver governorates \\
+\cline{2-3}
+ & hour\_of\_day & Hour the transaction was initiated \\
+\cline{2-3}
+ & account\_type\_savings & One-hot encoding of account type (SAVINGS = 1) \\
+\hline
+\multirow{4}{*}{Velocity} & sender\_tx\_count\_24h & Number of transfers sent in the last 24 hours \\
+\cline{2-3}
+ & sender\_amount\_sum\_24h & Total amount sent in the last 24 hours \\
+\cline{2-3}
+ & sender\_distinct\_dest\_24h & Distinct destination accounts in the last 24 hours \\
+\cline{2-3}
+ & days\_since\_last\_transaction & Days since the sender's previous transfer \\
+\hline
+\multirow{8}{*}{\makecell[l]{Per-user\\norm}} & amount\_z\_score\_user\_30d & How many standard deviations this amount is from the sender's 30-day average \\
+\cline{2-3}
+ & amount\_pct\_of\_user\_max\_lifetime & Amount as a fraction of the sender's largest ever transfer \\
+\cline{2-3}
+ & hour\_likelihood\_for\_user & How typical this hour is for this sender \\
+\cline{2-3}
+ & dest\_familiarity\_score & How often the sender has transacted with this destination \\
+\cline{2-3}
+ & velocity\_relative\_to\_user\_norm & Current 24h velocity relative to the sender's own historical average \\
+\cline{2-3}
+ & weekday\_typical\_for\_user & Whether this day of week fits the sender's pattern \\
+\cline{2-3}
+ & account\_type\_typical\_for\_user & Whether the source account type matches the sender's usual \\
+\cline{2-3}
+ & days\_since\_user\_account\_anomaly & Days since the last unusual event on this account \\
+\hline
+\multirow{6}{*}{\makecell[l]{Trust \&\\relationship}} & trust\_score & Sender's reputation score at time of scoring (0--100) \\
+\cline{2-3}
+ & is\_known\_beneficiary & Destination is a saved beneficiary of the sender \\
+\cline{2-3}
+ & transfers\_to\_dest\_lifetime & Historical transfer count to this destination \\
+\cline{2-3}
+ & is\_dest\_new\_account & Destination account opened within 30 days \\
+\cline{2-3}
+ & sender\_account\_age\_days & Age of the source account in days \\
+\cline{2-3}
+ & is\_sender\_new\_account & Source account opened within 30 days \\
+\hline
+\end{tabularx}
+\caption{The 24 scoring features}
+\label{tab:features}
+\end{table}
+\newpage
+\section{Data generation}
+
+No public dataset carries the 24 features from the previous section, so generating the training
+data from scratch was the only path forward. The approach follows the synthetic-simulator method
+introduced by PaySim~[6], extended here with per-user behavioural features. Table~\ref{tab:dataset-scale} summarises its scale.
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Dimension} & \textbf{Value} \\
+\hline
+Users & 10,000 \\
+\hline
+Accounts & 12,000 (70\% checking, 30\% savings) \\
+\hline
+Transactions & 500,000 over 12 months \\
+\hline
+Fraud rate & 1.5\% (7,500 fraud rows) \\
+\hline
+Bank codes & 15 \\
+\hline
+\end{tabular}
+\caption{Dataset scale}
+\label{tab:dataset-scale}
+\end{table}
+
+Each user has a distinct behavioural profile: their own typical amounts, preferred hours, usual
+frequency, and habitual destinations. What counts as normal is different for each sender. The
+per-user norm features are computed against that individual baseline, not against the
+population.
+
+Six fraud archetypes cover the main attack patterns, mixed at the weights in
+Table~\ref{tab:archetypes}.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\centering\arraybackslash}p{1.0cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Archetype} & \textbf{Weight} & \textbf{Pattern} & \textbf{Hard signal} \\
+\hline
+TAKEOVER & 20\% & 1--3 rapid transfers to a distant account & High distance, night hour, large amount \\
+\hline
+CARD\_TESTING & 20\% & A burst of small transfers to many distinct destinations within 90 minutes & Velocity burst, high distinct-dest count \\
+\hline
+LARGE\_UNUSUAL & 20\% & One off-pattern transfer to an unknown recipient & Amount above the 99th percentile (P99), zero prior history with destination \\
+\hline
+SLOW\_DRAIN & 10\% & 4--8 medium transfers spread over several days & No 24h signal; caught via balance and trust correlations \\
+\hline
+SAVINGS\_FRAUD & 15\% & Large out-of-hours drain from a savings account & Account type, night hour, high amount \\
+\hline
+\makecell{TROJAN\\TAKEOVER} & 15\% & 5--15 small trust-building transfers to a new beneficiary, then 1--3 large drains & Setup transfers at typical amounts followed by out-of-character high-value drains at off-hours \\
+\hline
+\end{tabularx}
+\caption{Fraud archetypes}
+\label{tab:archetypes}
+\end{table}
+
+Each archetype is parameterised against the victim's own profile. The same transfer, amount,
+hour, destination, can be labelled fraud for one user and legitimate for another.
+
+\section{Algorithm selection}
+
+We ran five candidates under the same protocol, then let the numbers decide; Table~\ref{tab:benchmark} reports their validation PR-AUC.
+
+The data was split by time: months 0--8 for training (\textasciitilde375K transactions),
+month 9 for validation (\textasciitilde42K), months 10--11 for testing
+(\textasciitilde83K).
+
+Class imbalance was handled through model weighting, not oversampling. We tested SMOTE~[15] and
+dropped it. On heterogeneous tabular data it generates synthetic minority rows that bear little
+resemblance to real fraud, which inflated training scores without improving production
+behaviour.
+
+PR-AUC was the selection metric. On a 1.5\% fraud rate, ROC-AUC is optimistic, because the
+negative class dominates the denominator. Precision-Recall does not have that problem~[14].
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|c|}
+\hline
+\textbf{Family} & \textbf{Algorithm} & \textbf{PR-AUC (val)} \\
+\hline
+\multirow{3}{*}{Gradient boosting} & LightGBM~[1] & 0.8908 \\
+\cline{2-3}
+ & XGBoost~[2] & 0.8689 \\
+\cline{2-3}
+ & CatBoost~[3] & 0.8653 \\
+\hline
+\multirow{2}{*}{Bagging} & Random Forest~[4] & 0.8682 \\
+\cline{2-3}
+ & Extra Trees~[5] & 0.8501 \\
+\hline
+\end{tabular}
+\caption{Candidate benchmark (validation set)}
+\label{tab:benchmark}
+\end{table}
+
+LightGBM topped the gradient boosting family. Random Forest topped the bagging family. Both
+were promoted, one from each side. The cross-family choice was intentional: the two algorithms use genuinely different learning strategies, rather than two variants of the same method under a different name.
+
+\section{Final model}
+
+The two selected algorithms sit inside a three-layer structure, as shown in Figure~\ref{fig:mlpyramid}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{MLPyramid.png}
+\caption{Three-layer scoring orchestrator}
+\label{fig:mlpyramid}
+\end{figure}
+
+\noindent\textbf{Layer 1} is LightGBM with isotonic calibration~[7]. It is the main scorer and runs on every
+transfer, turning the transaction's features into a fraud probability between 0 and 1. It was
+the strongest of the five candidates tested, which is why it carries the everyday scoring. The
+calibration step is what makes that probability trustworthy: it lines the model's output up
+with the real fraud rate.
+
+\noindent\textbf{Layer 2} is Random Forest, also isotonic-calibrated. As a bagging model with balanced class
+weights, it reaches its decision differently from Layer 1's gradient boosting. Layer 2 takes over when Layer 1 is down or unavailable, so the platform never loses the ability to score a transfer.
+
+\noindent\textbf{Layer 3} is not a machine learning model. It is a rule-based algorithm with fixed logic and no
+learned parameters. It does not depend on any trained artefact and is always available. Five
+rules cover the patterns the ML layers find hardest: a large transfer to an unknown recipient,
+a velocity burst, a high-amount night transfer, a large transfer from a new account, and a
+savings drain after hours.\\
+
+Every score maps to one of three risk levels: LOW, MEDIUM, or HIGH. LOW transfers execute
+immediately. MEDIUM and HIGH transfers are suspended and routed to the analyst review queue. Table~\ref{tab:test-metrics} reports the test-set metrics for the two learned layers.
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\linewidth}{@{}l c c >{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Metric} & \textbf{Layer 1 (LightGBM)} & \textbf{Layer 2 (Random Forest)} & \textbf{Layer 3 (Rules)} \\
+\midrule
+PR-AUC & 0.8995 & 0.8833 & \multirow{5}{=}{Rules-Based algorithm, always available} \\
+ROC-AUC & 0.9916 & 0.9932 & \\
+Precision & 0.9365 & 0.8670 & \\
+Recall & 0.8225 & 0.8195 & \\
+F1 & 0.8758 & 0.8425 & \\
+\bottomrule
+\end{tabularx}
+\caption{Test set metrics}
+\label{tab:test-metrics}
+\end{table}
+
+Fraud detection cannot afford gaps. If both learned layers are down, Layer 3 still fires. There
+is always a decision.
+
+\section{Conclusion}
+
+This chapter built the fraud detection system step by step. We started from the gap left by
+existing datasets, defined 24 features around per-user behavioural norms, generated the training
+data to carry them, and benchmarked five algorithms before settling on the three-layer
+orchestrator that runs in production. The per-user norm features are what separate this model
+from a static rule set. The always-available structure is what makes it reliable enough to sit
+on the critical path of every transfer. Chapter 5 presents the full implementation.
+
+%==============================================================
+%  CHAPTER 5 — REALIZATION
+%==============================================================
+\chapter{Realisation}
+\label{chap:realization}
+
+\section{Introduction}
+
+In this chapter, we show the working system. The previous chapters built the architecture and
+the fraud-detection model. This one documents what those designs produce when deployed. We
+cover the development environment, then screenshots of different app interfaces, and end with
+test results.
+
+\section{Development environment}
+
+\subsection{Hardware}
+
+Development ran on a single laptop. Table~\ref{tab:hardware} lists the specifications.
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Component} & \textbf{Specification} \\
+\hline
+\includegraphics[height=1em]{processor.png}~Processor & AMD Ryzen 5 4600H, 6 cores / 12 threads, 3.0 GHz \\
+\hline
+\includegraphics[height=1em]{ram.png}~Memory & 16 GB RAM \\
+\hline
+\includegraphics[height=1em]{hdd.png}~Storage & 512 GB NVMe SSD \\
+\hline
+\includegraphics[height=1em]{windows.png}~Operating system & Windows 11 Home \\
+\hline
+\end{tabular}
+\caption{Development machine}
+\label{tab:hardware}
+\end{table}
+
+The 16 GB of RAM was enough to run the full Docker Compose stack simultaneously: Spring Boot
+backend, CBS simulator, Keycloak, PostgreSQL, and the ML inference server. ML model training
+was CPU-only; the six-core Ryzen handled all five candidate models without a discrete GPU.
+\newpage
+\subsection{Software and technologies}
+
+Two categories structured the tooling: the tools used during development, and the technologies
+that run in production (Tables~\ref{tab:dev-tools} and~\ref{tab:tech}).
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Tool} & \textbf{Purpose} \\
+\hline
+\includegraphics[height=1em]{intellij.png}~IntelliJ IDEA & Java / Spring Boot development and debugging \\
+\hline
+\includegraphics[height=1em]{vscode.png}~VS Code & Python, React, React Native, Electron \\
+\hline
+\includegraphics[height=1em]{drawio.png}~draw.io & Architecture and UML diagrams \\
+\hline
+\includegraphics[height=1em]{figma.png}~Figma & UI/UX design (client app and backoffice) \\
+\hline
+\includegraphics[height=1em]{postman.png}~Postman & API testing and endpoint validation \\
+\hline
+\includegraphics[height=1em]{pgadmin.png}~pgAdmin 4 & PostgreSQL database inspection \\
+\hline
+\includegraphics[height=1em]{dockerdesktop.png}~Docker Desktop & Local container orchestration \\
+\hline
+\includegraphics[height=1em]{github.png}~Github & Version control \\
+\hline
+\includegraphics[height=1em]{texstudio.png}~TeXstudio & \LaTeX\ report writing \\
+\hline
+\end{tabular}
+\caption{Development tools}
+\label{tab:dev-tools}
+\end{table}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Layer} & \textbf{Technology} & \textbf{Version} \\
+\hline
+Backend & Java, \includegraphics[height=1em]{sb.png}~Spring Boot~[8] & 17 / 3.2.5 \\
+\hline
+Authentication & \includegraphics[height=1em]{kc.png}~Keycloak~[9] & 24.0 \\
+\hline
+Database & \includegraphics[height=1em]{pg.png}~PostgreSQL & 16 \\
+\hline
+Client app (web) & \includegraphics[height=1em]{react.png}~React, \includegraphics[height=1em]{vite.png}~Vite, \includegraphics[height=1em]{ts.png}~TypeScript, \includegraphics[height=1em]{twcss.png}~Tailwind & Latest \\
+\hline
+Client app (mobile) & \includegraphics[height=1em]{react.png}~React Native~[10], \includegraphics[height=1em]{expo.png}~Expo & 0.76 / 52 \\
+\hline
+Backoffice (web) & \includegraphics[height=1em]{react.png}~React, \includegraphics[height=1em]{vite.png}~Vite, \includegraphics[height=1em]{ts.png}~TypeScript, \includegraphics[height=1em]{twcss.png}~Tailwind & Latest \\
+\hline
+Backoffice (desktop) & \includegraphics[height=1em]{elec.png}~Electron & 42 \\
+\hline
+ML service & \includegraphics[height=1em]{python.png}~Python, FastAPI~[11] & 3.11 \\
+\hline
+Infrastructure & \includegraphics[height=1em]{dockerdesktop.png}~Docker, Docker Compose~[12] & 4.76.0 \\
+\hline
+Reverse proxy & \includegraphics[height=1em]{nginx.png}~Nginx & 1.29.8 \\
+\hline
+\end{tabular}
+\caption{Technologies and frameworks}
+\label{tab:tech}
+\end{table}
+\newpage
+\section{Implementation}
+
+\subsection{Client web app}
+
+The client web application runs on React 19 and Vite at port 5173. It offers the same features
+as the mobile app: account overview, peer transfers, beneficiary management, notifications, and
+profile. Both run against the same Spring Boot backend and authenticate through Keycloak.
+Figure~\ref{fig:scr-clientweb} shows the login page and Figure~\ref{fig:scr-homewebclient}
+shows the home page of the web app. The mobile app is covered in detail below.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\linewidth]{clientweb.png}
+\caption{Client web application: client login page}
+\label{fig:scr-clientweb}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\linewidth]{homewebpageclient.png}
+\caption{Client web application: home page}
+\label{fig:scr-homewebclient}
+\end{figure}
+
+\subsection{Mobile app (Android)}
+
+The mobile application is built with React Native 0.76 and Expo 52. It runs against the same backend as the web app.
+Figure~\ref{fig:mobile-screens} shows the eight main screens. The onboarding flow covers
+registration and login with OTP confirmation. The home and accounts views give the client a
+full picture of their funds across banks. Send money exposes all three recipient paths. A transactions history list sits alongside a
+fraud alerts list, and finally the notifications and profile pages complete the day-to-day experience.
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.235\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{login.jpg}
+  \subcaption{Login\label{fig:scr-login}}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.235\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{register.jpg}
+  \subcaption{Registration\label{fig:scr-register}}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.235\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{home.jpg}
+  \subcaption{Home\label{fig:scr-home}}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.235\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{accounts.jpg}
+  \subcaption{Accounts\label{fig:scr-accounts}}
+\end{minipage}
+\\[10pt]
+\begin{minipage}[b]{0.235\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{send.jpg}
+  \subcaption{Send money\label{fig:scr-sendmoney}}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.235\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{trx.jpg}
+  \subcaption{Transactions\label{fig:scr-trx}}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.235\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{alerts.jpg}
+  \subcaption{Alerts\label{fig:scr-notifications}}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.235\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{profile.jpg}
+  \subcaption{Profile\label{fig:scr-profile}}
+\end{minipage}
+\caption{Client mobile application: main screens}
+\label{fig:mobile-screens}
+\end{figure}
+
+\subsection{Backoffice (Desktop)}
+
+The backoffice runs on the same React and Vite stack as the web app, served at port 5174 and
+packaged as a Windows desktop application using Electron. It authenticates through the
+backoffice Keycloak realm.
+
+Figure~\ref{fig:scr-superadmin} shows the two SuperAdmin views: the ML configuration panel,
+where the active scoring layer, its stats and current thresholds are displayed alongside the analyst threshold reports, and the bank management
+page, where the CBS catalogue appears with per-bank activation toggles.
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{\linewidth}
+  \centering
+  \includegraphics[width=0.95\linewidth]{bo-sa-ml.png}
+  \subcaption{SuperAdmin: ML configuration\label{fig:scr-sa-ml}}
+\end{minipage}
+\\[10pt]
+\begin{minipage}[b]{\linewidth}
+  \centering
+  \includegraphics[width=0.95\linewidth]{bo-sa-banks.png}
+  \subcaption{Bank management\label{fig:scr-sa-banks}}
+\end{minipage}
+\caption{SuperAdmin: banks management}
+\label{fig:scr-superadmin}
+\end{figure}
+\newpage
+Figure~\ref{fig:scr-admin} shows the Admin view: the full clients list, where the admin handles
+the client lifecycle from one screen. Status tabs (All, Pending, Accepted, Active, Blocked,
+Rejected), a search box, and a per-bank filter make the list easy to navigate. Pending
+registrations, each prefilled with CBS data, can be approved or rejected; active clients can be
+blocked or unblocked. On approval the account moves to ACTIVE and the client is notified, while
+blocking revokes the client's access immediately.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{bo-admin.png}
+\caption{Admin: clients list}
+\label{fig:scr-admin}
+\end{figure}
+
+Figure~\ref{fig:scr-analyst} shows the Analyst view. Each fraud alert carries the ML risk
+score alongside the transaction details and sender profile. Approval triggers CBS execution;
+rejection closes the alert without moving funds.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{bo-analyst.png}
+\caption{Analyst: fraud alert queue}
+\label{fig:scr-analyst}
+\end{figure}
+
+\section{Tests and validation}
+
+\subsection{Unit tests}
+
+The backend test suite uses JUnit~5, Mockito, and AssertJ, and comprises 27 test classes.
+Table~\ref{tab:unit-tests} highlights 17 that cover the platform's main flows.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{5.0cm}|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Action} & \textbf{Test class} & \textbf{What it verifies} \\
+\hline
+Registration & \texttt{RegistrationServiceTest} & CIN lookup, OTP step, PENDING\_APPROVAL state \\
+\hline
+Authentication OTP & \texttt{OtpServiceTest} & 6-digit generation, 5-min TTL, max 3 attempts, 60s resend cooldown \\
+\hline
+Forgot password & \texttt{PasswordResetServiceTest} & OTP reset flow, anti-enumeration silent no-op, weak-password rejection, session invalidation \\
+\hline
+Peer transfer & \texttt{TransferServiceTest} & Recipient resolution, RIB validation, self-transfer rejection, balance check \\
+\hline
+Pre-transfer assist & \texttt{TransferAssistServiceTest} & RIB-to-bank resolution, recipient-name verification, @username lookup, name masking and rate limits \\
+\hline
+Fraud scoring & \texttt{FraudDetectionServiceTest} & LOW/MED/HIGH routing against thresholds; assembly of the 24-feature vector including the per-user-norm features \\
+\hline
+ML fallback & \texttt{MlIntegrationServiceTest} & Primary $\rightarrow$ Backup $\rightarrow$ Stub fallback transitions \\
+\hline
+Fraud alert & \texttt{AlertServiceTest} & Analyst approve/reject, CBS execution on approval \\
+\hline
+Trust score & \texttt{TrustScoreServiceTest} & Reputation deltas on auto-approve and alert outcomes; clamping to 0--100 \\
+\hline
+Transaction detail & \texttt{TransactionServiceTest} & Detail payload: ML reasons, trust delta, timeline, receiver-resolution fallback \\
+\hline
+CBS integration & \texttt{CbsIntegrationServiceTest} & Client/account lookup; atomic debit--credit transfer; insufficient-balance rejection \\
+\hline
+Beneficiary management & \texttt{BeneficiaryServiceTest} & RIB-keyed save, rename, delete \\
+\hline
+Profile & \texttt{ClientProfileServiceTest} & Profile assembled from local user state and CBS national identity; missing-record handling \\
+\hline
+Bank sync & \texttt{BankSyncServiceTest} & New bank insertion, force-deactivation on CBS removal \\
+\hline
+Bank deactivation & \texttt{BankDeactivationCascadeTest} & In-progress transfers auto-rejected when a bank is deactivated \\
+\hline
+RIB validation & \texttt{RibValidatorTest} & 20-digit mod-97 checksum; length, format, and whitespace handling \\
+\hline
+Name verification & \texttt{NameMatcherTest} & Case- and accent-insensitive recipient name matching \\
+\hline
+\end{tabularx}
+\caption{Unit tests by action}
+\label{tab:unit-tests}
+\end{table}
+
+\subsection{Integration tests}
+
+Integration tests verify the full request path from API call to database. Security is validated
+at every entry point: JWT tokens are checked against the Keycloak JWK endpoint on each request,
+the \texttt{BlockedUserFilter} returns 403 for blocked accounts, OTP verification is
+rate-limited to three attempts before invalidation, and every RIB input passes a mod-97 check
+before any CBS call is made. In a banking platform where transfers are instant and irreversible,
+these checks are not optional.
+
+\section{Deployment overview}
+\label{sec:deployment}
+
+The full system architecture was presented in Figure~\ref{fig:sysarch} (Chapter~3). At
+runtime, the platform's services are packaged as containers and orchestrated through a
+single Docker Compose stack: the Spring Boot backend, the CBS simulator, Keycloak, PostgreSQL,
+the ML inference server, the web applications, and an Nginx reverse proxy all start from
+one command. Each service is reachable on its own
+port within the Compose network, and the whole stack runs end to end on a single development
+machine. On startup, the CBS simulator populates its in-memory ledger with a realistic seed of
+50 clients, roughly 110 accounts, and 1,600 transactions. Figure~\ref{fig:docker-desktop} shows
+the running stack in Docker Desktop.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\linewidth]{docker.png}
+\caption{Docker Desktop: the full PayZo stack running as containers}
+\label{fig:docker-desktop}
+\end{figure}
+
+\section{Conclusion}
+
+This chapter presented the working system across its client and staff interfaces. The development environment ran entirely on a single machine, with the full Docker stack in parallel. The mobile app and the Electron backoffice were the primary delivery surfaces, covering the client and staff sides respectively. Tests validated the main application flows and confirmed that every security gate on the transfer pipeline holds. The next section closes the report with a summary of what was achieved and the directions left open for future work.
+
+%==============================================================
+%  GENERAL CONCLUSION & PERSPECTIVES
+%==============================================================
+\chapter*{General Conclusion and Perspectives}
+\addcontentsline{toc}{chapter}{General Conclusion and Perspectives}
+\markboth{General Conclusion and Perspectives}{}
+
+This project set out to answer a specific problem: Tunisian digital banking is growing fast,
+peer-to-peer transfers are its most vulnerable surface, and no existing platform combines
+unified account management with inline fraud scoring in a single system. PayZo is that system.
+
+The backend is a Spring Boot service secured by Keycloak, connected to PostgreSQL and a CBS
+simulator, and deployable as a single Docker Compose stack. The fraud-detection layer trains
+on 500,000 synthetic transactions generated from per-user behavioural archetypes; the final
+model is a three-layer orchestrator with LightGBM as the primary scorer (PR-AUC 0.90,
+ROC-AUC 0.99) and a rule-based firewall as the last resort. Transactions flagged at medium or
+high risk go to an analyst review queue. The client uses a React web app and a React Native
+mobile app; staff use a React web app and an Electron desktop app with role-scoped views for the Admin,
+Analyst, and SuperAdmin roles.
+
+\subsection*{Limitations}
+
+The training data is synthetic. Real transaction history from the BCT or a partner institution
+is a prerequisite for any live deployment, and that validation has not been done. The platform
+is also Tunisia-specific and handles only Tunisian dinars; multi-currency or cross-border
+transfers would require regulatory review and data-model changes outside the current scope.
+
+\subsection*{Perspectives}
+
+Replacing the synthetic dataset with real, anonymised BCT data is the most direct path to a
+better model, as it would allow threshold calibration against actual fraud rates. On the
+product side, biometric authentication on the transfer confirmation step would close the gap
+most OTP-bypass attacks exploit. Further out, a proper deployment pipeline with automated
+testing and a staging environment tied to a real CBS is what converts this prototype into
+something a banking partner could run in production.
+
+%==============================================================
+%  BACK MATTER
+%==============================================================
+\chapter*{Bibliography}
+\addcontentsline{toc}{chapter}{Bibliography}
+\markboth{Bibliography}{}
+
+\begin{enumerate}[label={[\arabic*]},leftmargin=1.6cm,itemsep=1.5pt,parsep=0pt,topsep=2pt]
+
+  \item Ke, G., Meng, Q., Finley, T., Wang, T., Chen, W., Ma, W., Ye, Q., \& Liu, T.-Y.
+        (2017). \textit{LightGBM: A Highly Efficient Gradient Boosting Decision Tree}.
+        Advances in Neural Information Processing Systems (NeurIPS), 30.
+
+  \item Chen, T., \& Guestrin, C. (2016). \textit{XGBoost: A Scalable Tree Boosting System}.
+        Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery
+        and Data Mining, 785--794.
+
+  \item Prokhorenkova, L., Gusev, G., Vorobev, A., Dorogush, A. V., \& Gulin, A. (2018).
+        \textit{CatBoost: Unbiased Boosting with Categorical Features}. Advances in Neural
+        Information Processing Systems (NeurIPS), 31.
+
+  \item Breiman, L. (2001). \textit{Random Forests}. Machine Learning, 45(1), 5--32.
+
+  \item Geurts, P., Ernst, D., \& Wehenkel, L. (2006). \textit{Extremely Randomized Trees}.
+        Machine Learning, 63(1), 3--42.
+
+  \item Lopez-Rojas, E., Elmir, A., \& Axelsson, S. (2016). \textit{PaySim: A Financial
+        Mobile Money Simulator for Fraud Detection}. Proceedings of the 28th European
+        Modeling and Simulation Symposium (EMSS).
+
+  \item Zadrozny, B., \& Elkan, C. (2002). \textit{Transforming Classifier Scores into
+        Accurate Multiclass Probability Estimates}. Proceedings of the 8th ACM SIGKDD
+        International Conference on Knowledge Discovery and Data Mining, 694--699.
+
+  \item Broadcom (VMware Tanzu). (2024). \textit{Spring Boot Reference Documentation}.
+        \url{https://spring.io/projects/spring-boot} [Accessed 30 May 2026]
+
+  \item Red Hat. (2024). \textit{Keycloak Documentation}.
+        \url{https://www.keycloak.org/documentation} [Accessed 30 May 2026]
+
+  \item Meta Platforms. (2024). \textit{React Native Documentation}.
+        \url{https://reactnative.dev/} [Accessed 30 May 2026]
+
+  \item Sebastián Ramírez. (2024). \textit{FastAPI Documentation}.
+        \url{https://fastapi.tiangolo.com/} [Accessed 30 May 2026]
+
+  \item Docker, Inc. (2024). \textit{Docker Documentation}.
+        \url{https://docs.docker.com/} [Accessed 30 May 2026]
+
+  \item Roques, P. (2004). \textit{UML in Practice: The Art of Modeling Software Systems
+        Demonstrated through Worked Examples and Solutions}. John Wiley \& Sons.
+
+  \item Saito, T., \& Rehmsmeier, M. (2015). \textit{The Precision--Recall Plot Is More
+        Informative than the ROC Plot When Evaluating Binary Classifiers on Imbalanced
+        Datasets}. PLOS ONE, 10(3), e0118432.
+
+  \item Chawla, N. V., Bowyer, K. W., Hall, L. O., \& Kegelmeyer, W. P. (2002).
+        \textit{SMOTE: Synthetic Minority Over-sampling Technique}. Journal of Artificial
+        Intelligence Research, 16, 321--357.
+
+\end{enumerate}
+
+\chapter*{Webography}
+\addcontentsline{toc}{chapter}{Webography}
+\markboth{Webography}{}
+
+\begin{enumerate}[label={[W\arabic*]},leftmargin=1.6cm,itemsep=1.5pt,parsep=0pt,topsep=2pt]
+
+  %% -- Statistics sources --
+  \item \phantomsection\label{web:bct1}
+        L'Économiste Maghrébin. \textit{Paiements électroniques en Tunisie : Résultats 2024}.
+        \href{https://www.leconomistemaghrebin.com/2025/02/25/paiements-electroniques-tunisie/}%
+        {www.leconomistemaghrebin.com} [Accessed 30 May 2026]
+
+  \item \phantomsection\label{web:bct2}
+        Tunisie Numérique. \textit{Les paiements mobiles bondissent de 81\% en 2025}.
+        \href{https://www.thd.tn/paiement-mobile-en-tunisie-81-de-transactions-en-2025/}%
+        {www.thd.tn} [Accessed 30 May 2026]
+
+  \item \phantomsection\label{web:veriff}
+        Veriff / TechRadar. \textit{The Cost of Fraud: Fraud Report 2026}.
+        \href{https://www.veriff.com/fraud/learn/the-cost-of-fraud}{www.veriff.com}
+        [Accessed 30 May 2026]
+
+  \item \phantomsection\label{web:deepfake}
+        VentureBeat / Deloitte. \textit{Deepfakes will cost \$40 billion by 2027 as
+        adversarial AI gains momentum}.
+        \href{https://venturebeat.com/security/deepfakes-will-cost-40-billion-by-2027-as-adversarial-ai-gains-momentum}%
+        {venturebeat.com} [Accessed 30 May 2026]
+
+  \item \phantomsection\label{web:deloitte}
+        Deloitte Center for Financial Services. \textit{Deepfake Banking Fraud Risk on the
+        Rise}.
+        \href{https://www.deloitte.com/us/en/insights/industry/financial-services/deepfake-banking-fraud-risk-on-the-rise.html}%
+        {www.deloitte.com} [Accessed 30 May 2026]
+
+  %% -- Datasets --
+  \item \phantomsection\label{web:paysim}
+        Kaggle. \textit{PaySim: Mobile Money Fraud Detection Dataset}.
+        \href{https://www.kaggle.com/datasets/ealaxi/paysim1}{www.kaggle.com}
+        [Accessed 30 May 2026]
+
+  \item \phantomsection\label{web:ieeecis}
+        Kaggle. \textit{IEEE-CIS Fraud Detection Competition}.
+        \href{https://www.kaggle.com/competitions/ieee-fraud-detection}{www.kaggle.com}
+        [Accessed 30 May 2026]
+
+  \item \phantomsection\label{web:ulb}
+        Kaggle / ULB Machine Learning Group. \textit{Credit Card Fraud Detection Dataset}.
+        \href{https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud}{www.kaggle.com}
+        [Accessed 30 May 2026]
+
+  %% -- Open-source repositories --
+  \item \phantomsection\label{web:jube}
+        Jube. \textit{AML Fraud Transaction Monitoring}.
+        \href{https://github.com/jube-home/aml-fraud-transaction-monitoring}{github.com/jube-home}
+        [Accessed 30 May 2026]
+
+  \item \phantomsection\label{web:hf}
+        Hugging Face / vaibhav07112004. \textit{Fraud Detection Models}.
+        \href{https://huggingface.co/vaibhav07112004/fraud-detection-models}%
+        {huggingface.co} [Accessed 30 May 2026]
+
+  \item \phantomsection\label{web:sergio}
+        sergio11. \textit{Online Payment Fraud Detection}.
+        \href{https://github.com/sergio11/online_payment_fraud}{github.com/sergio11}
+        [Accessed 30 May 2026]
+
+  %% -- Existing solutions --
+  \item \phantomsection\label{web:n26}
+        N26 GmbH. \textit{N26: The Mobile Bank}.
+        \href{https://n26.com/en-eu}{n26.com} [Accessed 30 May 2026]
+
+  \item \phantomsection\label{web:emma}
+        Emma Technologies Ltd. \textit{Emma: Budget Planner \& Tracker}.
+        \href{https://emma-app.com/}{emma-app.com} [Accessed 30 May 2026]
+
+  \item \phantomsection\label{web:feedzai}
+        Feedzai. \textit{Feedzai RiskOps Platform}.
+        \href{https://www.feedzai.com/}{www.feedzai.com} [Accessed 30 May 2026]
+
+  \item \phantomsection\label{web:plaid}
+        Plaid Inc. \textit{Plaid: The Network That Powers Fintech}.
+        \href{https://plaid.com/}{plaid.com} [Accessed 30 May 2026]
+
+\end{enumerate}
+
+\end{document}

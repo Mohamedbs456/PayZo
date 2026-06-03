@@ -1,0 +1,13 @@
+services:
+
+  # Dev overrides for backend:
+  # - Remote debug on port 5005 (attach from IDE)
+  # - Maven .m2 cache bind-mounted to avoid re-downloading on every rebuild
+  backend:
+    environment:
+      JAVA_TOOL_OPTIONS: >-
+        -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    ports:
+      - "5005:5005"
+    volumes:
+      - ${USERPROFILE:-.}/.m2:/root/.m2:ro

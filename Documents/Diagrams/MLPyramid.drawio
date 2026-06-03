@@ -1,0 +1,40 @@
+<mxfile host="Electron">
+  <diagram name="MLPyramid" id="MLPyramid">
+    <mxGraphModel dx="1069" dy="626" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="770" pageHeight="320" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;fontSize=14;fontStyle=1;align=left;" value="Scoring service: 3-layer fallback&amp;nbsp;mechanism" vertex="1">
+          <mxGeometry height="22" width="440" x="50" y="34" as="geometry" />
+        </mxCell>
+        <mxCell id="base" parent="1" style="shape=trapezoid;whiteSpace=wrap;html=1;fontStyle=1;fontSize=12;strokeColor=#000000;fillColor=#E6D0DE;size=0.1665;" value="Baseline&lt;div&gt;&lt;span style=&quot;font-size: 8px;&quot;&gt;(Rule-Based Algorithm)&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="270" x="155" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="mid" parent="1" style="shape=trapezoid;whiteSpace=wrap;html=1;fontStyle=1;fontSize=12;strokeColor=#000000;fillColor=#CDA2BE;size=0.25;" value="Backup&lt;div&gt;&lt;span style=&quot;font-size: 8px;&quot;&gt;(Random Forest)&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="180" x="200" y="145" as="geometry" />
+        </mxCell>
+        <mxCell id="apex" parent="1" style="shape=triangle;direction=north;whiteSpace=wrap;html=1;fontStyle=1;fontSize=12;strokeColor=#000000;fillColor=#B5739D;verticalAlign=bottom;spacingBottom=6;" value="&lt;div style=&quot;line-height: 90%;&quot;&gt;Primary&lt;div&gt;&lt;font style=&quot;font-size: 8px; line-height: 90%;&quot;&gt;(LightGBM)&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="90" x="245" y="85" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" parent="1" style="shape=step;perimeter=stepPerimeter;direction=west;html=1;whiteSpace=wrap;fontSize=9;align=center;verticalAlign=middle;spacingLeft=8;spacingRight=8;strokeColor=#000000;fillColor=#f7f7f7;size=0.12;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;The main AI model that scores every transfer.&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;font style=&quot;&quot;&gt;Being&amp;nbsp;&lt;/font&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;the most accurate, it&#39;s always used first.&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="300" x="344" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" parent="1" style="shape=step;perimeter=stepPerimeter;direction=west;html=1;whiteSpace=wrap;fontSize=9;align=center;verticalAlign=middle;spacingLeft=8;spacingRight=8;strokeColor=#000000;fillColor=#f7f7f7;size=0.12;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;A simpler secondary model. The system switches&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;to it&amp;nbsp;&lt;/font&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;automatically if the main model is unavailable.&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="300" x="390" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" parent="1" style="shape=step;perimeter=stepPerimeter;direction=west;html=1;whiteSpace=wrap;fontSize=9;align=center;verticalAlign=middle;spacingLeft=8;spacingRight=8;strokeColor=#000000;fillColor=#f7f7f7;size=0.12;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;A non-AI safety net using basic rules. It always&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;returns&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;a score, so no transfer goes unchecked.&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="300" x="436" y="215" as="geometry" />
+        </mxCell>
+        <mxCell id="Lu6P0x05Eg5W7LUx8vv5-4" parent="1" style="shape=gitTag;tabSize=8;tabInset=4;holeSize=1;whiteSpace=wrap;html=1;direction=west;" value="Layer 1" vertex="1">
+          <mxGeometry height="20" width="85" x="160" y="105" as="geometry" />
+        </mxCell>
+        <mxCell id="Lu6P0x05Eg5W7LUx8vv5-5" parent="1" style="shape=gitTag;tabSize=8;tabInset=4;holeSize=1;whiteSpace=wrap;html=1;direction=west;" value="Layer 2" vertex="1">
+          <mxGeometry height="20" width="85" x="115" y="165" as="geometry" />
+        </mxCell>
+        <mxCell id="Lu6P0x05Eg5W7LUx8vv5-6" parent="1" style="shape=gitTag;tabSize=8;tabInset=4;holeSize=1;whiteSpace=wrap;html=1;direction=west;" value="Layer 3" vertex="1">
+          <mxGeometry height="20" width="85" x="70" y="225" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

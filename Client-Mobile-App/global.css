@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Semantic tokens ported from Client-Web-App/src/index.css. Light values
+ * live on :root; the dark block mirrors the web's html.dark overrides.
+ * NativeWind drives prefers-color-scheme from its runtime colorScheme, so
+ * setColorScheme("dark") flips these without per-component dark: classes —
+ * same single-class-name model the web uses.
+ */
+:root {
+  --color-text-primary: #0e1b2c;
+  --color-text-secondary: #457b9d;
+  --color-text-muted: rgba(29, 53, 87, 0.6);
+  --color-text-faint: rgba(29, 53, 87, 0.4);
+  --color-text-on-inverse: #f1faee;
+
+  --color-surface-card: #ffffff;
+  --color-surface-soft: #f1faee;
+  --color-surface-raised: #f8fcf6;
+  --color-surface-inverse: #0e1b2c;
+
+  --color-border: rgba(29, 53, 87, 0.12);
+  --color-border-soft: rgba(29, 53, 87, 0.08);
+  --color-border-strong: #a8dadc;
+  --color-scrim: #0e1b2c;
+
+  --color-accent: #1d3557;
+  --color-accent-foreground: #f1faee;
+  --color-accent-soft: #cae8ea;
+  --color-brand-teal: #a8dadc;
+
+  --color-positive: #5dcaa5;
+  --color-positive-soft: #dff5ec;
+  --color-warning: #ef9f27;
+  --color-warning-soft: #fbe9c9;
+  --color-negative: #e63946;
+  --color-negative-soft: #fde6e6;
+  --color-info: #0ea5e9;
+}
+
+.dark {
+  --color-text-primary: #f1faee;
+    --color-text-secondary: #a8dadc;
+    --color-text-muted: rgba(241, 250, 238, 0.6);
+    --color-text-faint: rgba(241, 250, 238, 0.4);
+    --color-text-on-inverse: #0e1b2c;
+
+    --color-surface-card: #15263c;
+    --color-surface-soft: #0a1322;
+    --color-surface-raised: #1c3050;
+    --color-surface-inverse: #f1faee;
+
+    --color-border: rgba(168, 218, 220, 0.18);
+    --color-border-soft: rgba(168, 218, 220, 0.1);
+    --color-border-strong: #457b9d;
+    --color-scrim: #000000;
+
+    --color-accent: #a8dadc;
+    --color-accent-foreground: #0e1b2c;
+    --color-accent-soft: rgba(168, 218, 220, 0.16);
+    --color-brand-teal: #cae8ea;
+
+    --color-positive-soft: rgba(93, 202, 165, 0.18);
+    --color-warning-soft: rgba(239, 159, 39, 0.18);
+    --color-negative-soft: rgba(230, 57, 70, 0.18);
+}

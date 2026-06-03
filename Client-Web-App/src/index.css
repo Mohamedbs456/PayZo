@@ -1,0 +1,265 @@
+@import "tailwindcss";
+
+/*
+ * @theme — PayZo client app design tokens.
+ *
+ * Sourced from the Figma "PayZo Client — Design System" file
+ * (1e0JljQYW9d6pa42vFKggD). The Figma variables are namespaced
+ * `color/text/...`, `color/bg/...`, `color/accent/...`, `color/border/...`
+ * — they're remapped here onto semantic Tailwind utilities so lifted
+ * components (Toast, ConfirmDialog, …) keep working without rename.
+ *
+ * Brand palette (anchor swatches):
+ *   #0e1b2c  deep navy   — primary text, scrim, toast bg
+ *   #1d3557  navy        — accent / primary CTA
+ *   #457b9d  mid blue    — secondary text, links
+ *   #a8dadc  light teal  — strong border, brand highlight
+ *   #f1faee  cream       — page bg, on-accent text
+ *   #ffffff  white       — card surface
+ */
+@theme {
+  /* ─── Text scale ──────────────────────────────────────────────── */
+  --color-text-primary:    #0e1b2c;
+  --color-text-secondary:  #457b9d;       /* form labels, links */
+  --color-text-muted:      rgba(29, 53, 87, 0.6);
+  --color-text-faint:      rgba(29, 53, 87, 0.4);
+  --color-text-on-inverse: #f1faee;       /* on dark surfaces */
+
+  /* ─── Surfaces ────────────────────────────────────────────────── */
+  --color-surface-card:    #ffffff;       /* cards, modals, inputs */
+  --color-surface-soft:    #f1faee;       /* page bg, soft hover */
+  --color-surface-raised:  #f8fcf6;       /* slightly raised vs page bg — secondary buttons, requirement dots */
+  --color-surface-inverse: #0e1b2c;       /* toasts, snackbars */
+
+  /* ─── Borders / scrim ─────────────────────────────────────────── */
+  --color-border:          rgba(29, 53, 87, 0.12);
+  --color-border-soft:     rgba(29, 53, 87, 0.08);
+  --color-border-strong:   #a8dadc;       /* light teal — also brand highlight */
+  --color-scrim:           #0e1b2c;       /* with /40 opacity for modals */
+
+  /* ─── Brand accent (CTA) ──────────────────────────────────────── */
+  --color-accent:            #1d3557;     /* primary button, focus ring */
+  --color-accent-foreground: #f1faee;
+  --color-accent-soft:       #cae8ea;     /* light cyan — info cards, selected state */
+  --color-brand-teal:        #a8dadc;     /* brand highlight — P/Z accents, strong borders */
+
+  /* ─── Status (semantic — values match Figma success/warning/danger) ─── */
+  --color-positive:      #5dcaa5;
+  --color-positive-soft: #dff5ec;
+  --color-warning:       #ef9f27;         /* Figma warning/default */
+  --color-warning-soft:  #fbe9c9;         /* Figma warning/soft (warm cream) */
+  --color-negative:      #e63946;         /* Figma danger/default */
+  --color-negative-soft: #fde6e6;         /* Figma danger/soft */
+  --color-info:          #0ea5e9;         /* sky-500 */
+
+  /* ─── Chart palette (placeholders — refined per page) ─────────── */
+  --color-chart-1: #1d3557;
+  --color-chart-2: #457b9d;
+  --color-chart-3: #a8dadc;
+  --color-chart-4: #f59e0b;
+  --color-chart-5: #ef4444;
+
+  /* ─── Fonts ───────────────────────────────────────────────────── */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Instrument Sans", "Inter", ui-sans-serif, system-ui,
+    sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+
+  /* ─── Tailwind v4 keyframe registrations ──────────────────────── */
+  /*
+   * Subtle outward pulse for the active chip in the send-money step
+   * indicator (SendStepIndicator). Loops continuously while the user
+   * sits on a step, giving the chip a "you are here" presence without
+   * stealing focus.
+   */
+  --animate-step-ping: step-ping 1.6s ease-out infinite;
+  @keyframes step-ping {
+    0%   { transform: scale(1);   opacity: 0.45; }
+    70%  { transform: scale(1.9); opacity: 0;    }
+    100% { transform: scale(1.9); opacity: 0;    }
+  }
+
+  /*
+   * One-shot fade + slight upward drift used by the send-money flow
+   * to soften step transitions. Re-fires on remount via React keys
+   * (e.g. `key={state.step}`).
+   */
+  --animate-step-fade-in: step-fade-in 320ms ease-out both;
+  @keyframes step-fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0);    }
+  }
+
+  /*
+   * Smooth row-expand for collapsible cards (TransactionRow, etc.).
+   * The grid-rows-[0fr] / grid-rows-[1fr] trick lets us animate to
+   * the natural content height without measuring it in JS — the
+   * inner element keeps `min-h-0 overflow-hidden` so it clips during
+   * the animation.
+   */
+  --animate-row-expand: row-expand 280ms ease-out forwards;
+  --animate-row-collapse: row-collapse 220ms ease-in forwards;
+  @keyframes row-expand {
+    from { grid-template-rows: 0fr; opacity: 0; }
+    to   { grid-template-rows: 1fr; opacity: 1; }
+  }
+  @keyframes row-collapse {
+    from { grid-template-rows: 1fr; opacity: 1; }
+    to   { grid-template-rows: 0fr; opacity: 0; }
+  }
+
+  /*
+   * One-shot ring pulse used to draw the eye to a beneficiary card after
+   * the user picks "Open beneficiary" from a favourites-bubble menu.
+   */
+  --animate-card-flash: card-flash 700ms ease-out;
+  @keyframes card-flash {
+    0%   { box-shadow: 0 0 0 0 var(--color-accent-soft); }
+    40%  { box-shadow: 0 0 0 6px var(--color-accent-soft); }
+    100% { box-shadow: 0 0 0 0 var(--color-accent-soft); }
+  }
+}
+
+/* Motion tokens — BACKEND_IMPACTS Impact 19. The only durations allowed. */
+:root {
+  --motion-fast: 150ms;
+  --motion-press: 100ms;
+  --motion-medium: 200ms;
+  --motion-slow: 250ms;
+  --motion-route: 180ms;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-in: cubic-bezier(0.5, 0, 0.75, 0);
+
+  /* Brand gradient — used on the auth brand panel.
+     Angle + stops match the Figma frame (74:6).               */
+  --gradient-brand: linear-gradient(
+    123.72deg,
+    #0e1b2c 0%,
+    #1d3557 39.286%,
+    #457b9d 71.429%
+  );
+
+  /* Balance hero gradient — distinct teal/cyan palette used on
+     the dashboard total-balance card (Figma 109:25). Cooler than
+     the auth brand panel so the two read as different surfaces. */
+  --gradient-balance: linear-gradient(
+    149.69deg,
+    #063b4d 0%,
+    #104d64 36.6%,
+    #1f7a8c 73.2%
+  );
+
+  /* Avatar gradient — used on the profile-panel hero circle
+     (Figma 18:98). Same teal family as the balance hero but
+     darker/tighter so it reads as a photo placeholder. */
+  --gradient-avatar: linear-gradient(
+    135.91deg,
+    #1f7a8c 0%,
+    #062b3a 71.4%
+  );
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--color-surface-soft);
+  color: var(--color-text-primary);
+}
+
+/* ─── Dark mode overrides ────────────────────────────────────────────────
+ * Activated by toggling `class="dark"` on <html>. We override the same
+ * @theme tokens on `html.dark` (specificity 0,1,1) so every component
+ * already wired to `bg-surface-card`, `text-text-primary`, etc. recolors
+ * automatically — no per-component `dark:` classes needed.
+ *
+ * `html.dark` (specificity 0,1,1) beats Tailwind v4's compiled @theme
+ * declarations on `:root, ::before, ::after, ::backdrop` (0,1,0 each)
+ * so the overrides win the cascade. Authenticated AND public pages
+ * (login, signup, forgot-password, maintenance, 404) all pick this up
+ * since the class lives on <html> for the whole app.
+ *
+ * Tailwind also needs `@variant dark` registered so any `dark:*`
+ * utility we add later compiles to the matching selector.
+ *
+ * Palette is the existing brand navy/teal inverted — text is cream on a
+ * deep-navy page bg, accent flips to the light teal so CTAs stay
+ * readable on the dark surface.
+ */
+@variant dark (&:where(html.dark[data-app-section="internal"] *, html.dark[data-app-section="internal"]));
+
+html.dark[data-app-section="internal"] {
+  --color-text-primary:    #f1faee;
+  --color-text-secondary:  #a8dadc;
+  --color-text-muted:      rgba(241, 250, 238, 0.6);
+  --color-text-faint:      rgba(241, 250, 238, 0.4);
+  --color-text-on-inverse: #0e1b2c;
+
+  --color-surface-card:    #15263c;
+  --color-surface-soft:    #0a1322;
+  --color-surface-raised:  #1c3050;
+  --color-surface-inverse: #f1faee;
+
+  --color-border:          rgba(168, 218, 220, 0.18);
+  --color-border-soft:     rgba(168, 218, 220, 0.10);
+  --color-border-strong:   #457b9d;
+  --color-scrim:           #000000;
+
+  --color-accent:            #a8dadc;
+  --color-accent-foreground: #0e1b2c;
+  --color-accent-soft:       rgba(168, 218, 220, 0.16);
+  --color-brand-teal:        #cae8ea;
+
+  /* Status soft fills get an alpha lift so they read on dark surfaces.
+     The solid status colors (positive / warning / negative) keep their
+     light-mode values — they're already calibrated for both modes. */
+  --color-positive-soft: rgba(93, 202, 165, 0.18);
+  --color-warning-soft:  rgba(239, 159, 39, 0.18);
+  --color-negative-soft: rgba(230, 57, 70, 0.18);
+
+  /* Avatar gradient — flatten to a near-black teal in dark mode so the
+     placeholder circle in the profile panel doesn't glow against the
+     deep-navy page background. */
+  --gradient-avatar: linear-gradient(135.91deg, #1f7a8c 0%, #021b25 71.4%);
+
+  color-scheme: dark;
+}
+
+html.dark[data-app-section="internal"] body {
+  background: var(--color-surface-soft);
+  color: var(--color-text-primary);
+}
+
+/* Hide the browser's native password-reveal pseudo-elements. Edge
+   (and other Chromium variants on Windows) inject ::-ms-reveal next
+   to every <input type="password">, which stacks on top of the eye
+   toggle baked into our PasswordField. We always supply our own
+   reveal affordance, so the native one is pure visual noise. */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
+/* Suppress the native clear button WebKit/Blink injects on
+   <input type="search"> — we always supply our own X button so
+   the native one would only ever stack as a duplicate. */
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
+/* prefers-reduced-motion — Impact 19 accessibility clause */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

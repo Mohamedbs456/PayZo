@@ -1,0 +1,104 @@
+# ─── IDE ──────────────────────────────────────────────────────────────────────
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+*~
+
+# ─── OS ───────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Java / Maven ─────────────────────────────────────────────────────────────
+target/
+*.class
+*.jar
+*.war
+!.mvn/wrapper/maven-wrapper.jar
+
+# ─── Node / JavaScript / TypeScript ───────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tsbuildinfo
+.vite/
+coverage/
+*.local
+
+# ─── Expo / React Native (Client-Mobile-App) ─────────────────────────────────
+.expo/
+.expo-shared/
+*.apk
+*.aab
+*.keystore
+android/.gradle/
+android/build/
+android/app/build/
+android/.cxx/
+android/local.properties
+ios/Pods/
+ios/build/
+ios/*.xcworkspace
+*.hbc
+
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+venv/
+.venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ─── Environment & Secrets ────────────────────────────────────────────────────
+.env
+*.env.local
+
+# ─── Docker ───────────────────────────────────────────────────────────────────
+# docker-compose.yml and Dockerfiles are committed.
+# Local data volumes and overrides are not.
+postgres-data/
+
+# ─── Uploads ──────────────────────────────────────────────────────────────────
+uploads/
+
+# ─── ML Artifacts (large binary files) ────────────────────────────────────────
+ML-Service/data/raw/
+ML-Service/data/*.parquet
+ML-Service/artifacts/**/*.pkl
+ML-Service/artifacts/**/*.json
+!ML-Service/artifacts/.gitkeep
+ML-Service/catboost_info/
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ─── Electron desktop app (large binaries — never commit) ─────────────────────
+BO-Desktop-App/
+BO-Web-App/release/
+
+# ─── draw.io autosave backups ─────────────────────────────────────────────────
+*.drawio.bkp
+.*.drawio.bkp
+
+# ─── Claude Code config (tool-specific, not project source) ──────────────────
+.claude/
+
+# ─── Personal notes / defense prep (never commit) ────────────────────────────
+_notes/
+_defense/
+
+# ─── Stray scratch files ──────────────────────────────────────────────────────
+$null

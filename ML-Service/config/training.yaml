@@ -1,0 +1,202 @@
+# PayZo ML v5 training configuration — Phase 4 multi-algorithm benchmark.
+#
+# train.py loads this file and:
+#   1. Generates synthetic data per `data:` (archetype-driven legit + victim-aware fraud)
+#   2. Builds features.parquet (24 features — see feature_engineering.py)
+#   3. Splits temporally per `split:`
+#   4. Loops over every entry in `candidates:`, training each via
+#      candidates.train_candidate
+#   5. Calls promote.promote_top_two — top GBM → Tier 1, top bagging → Tier 2
+#   6. Asserts `sanity_thresholds:` on the promoted Tier 1 + Tier 2
+#   7. Uses `decisions:` to write thresholds.json (matches Spring's MlModelConfig)
+
+# ---------------------------------------------------------------------------
+# Data generation parameters — drives data_generation/generate.py.
+# ---------------------------------------------------------------------------
+data:
+  random_seed: 42
+
+  users:
+    count: 10000
+
+  accounts:
+    count: 12000
+    checking_share: 0.70
+    savings_share: 0.30
+    bank_codes:
+      - ATB
+      - BNA
+      - STB
+      - BIAT
+      - AB
+      - BH
+      - UIB
+      - ATTIJ
+      - CIB
+      - ABC
+      - BTK
+      - BTE
+      - BFT
+      - ZB
+      - ABK
+
+  transactions:
+    count: 500000
+    fraud_rate: 0.015
+    epoch_offset_months: 12
+
+  # Fraud mix — same 6 archetypes as v4 (SUSTAINED_ESCALATION stays disabled
+  # in v5). Each archetype now reads the VICTIM's user archetype to draw
+  # out-of-character amounts / hours from FRAUD_OVERRIDES (see
+  # data_generation/fraud_archetypes.py).
+  fraud_mix:
+    TAKEOVER: 0.20
+    CARD_TESTING: 0.20
+    LARGE_UNUSUAL: 0.20
+    SLOW_DRAIN: 0.10
+    SAVINGS_FRAUD: 0.15
+    TROJAN_TAKEOVER: 0.15
+
+# ---------------------------------------------------------------------------
+# Temporal split — absolute month offsets from the dataset epoch.
+# ---------------------------------------------------------------------------
+split:
+  train_months: [0, 9]
+  val_months:   [9, 10]
+  test_months:  [10, 12]
+
+# ---------------------------------------------------------------------------
+# Decision thresholds — written to artifacts/thresholds.json and consumed by
+# the Spring backend MlModelConfig + orchestrator.
+# ---------------------------------------------------------------------------
+decisions:
+  allow_max: 0.30
+  block_min: 0.70
+  confidence_floor: 0.05
+
+# ---------------------------------------------------------------------------
+# Sanity thresholds — train.py asserts these AFTER promotion. Failing the
+# Tier 1 gates aborts the training run so we never ship a regression.
+# ---------------------------------------------------------------------------
+sanity_thresholds:
+  tier1_pr_auc_min:    0.85
+  tier1_roc_auc_min:   0.95
+  tier1_precision_min: 0.80
+  tier1_recall_min:    0.80
+  tier2_pr_auc_min:    0.70
+  max_single_feature_importance: 0.50    # no single feature dominates the split
+
+# ---------------------------------------------------------------------------
+# Hyperparameter tuning (Optuna) — see tuning.py.
+# When enabled, train.py runs a per-candidate TPE search that maximizes
+# calibrated validation PR-AUC, then trains the final artifact with the best
+# params via the unchanged train_candidate path. The `hyperparams:` blocks below
+# stay as the base/fixed params (and are the exact params used when disabled).
+# Search spaces live in tuning.py (per algorithm). Budgets are per family:
+#   gbm     = xgboost / lightgbm / catboost   (fast trials, early-stopped)
+#   bagging = random_forest / extra_trees     (slow trials → search_subsample)
+# Default OFF → runs are byte-for-byte identical to the hand-tuned benchmark.
+# ---------------------------------------------------------------------------
+tuning:
+  enabled: false
+  sampler_seed: 42
+  per_family:
+    gbm:
+      n_trials: 12           # conservative for modest hardware; raise to 30-40 on CI
+      timeout_seconds: 150
+    bagging:
+      n_trials: 8
+      timeout_seconds: 240
+      search_subsample: 0.4    # fit search trials on 40% of train (stratified)
+
+# ---------------------------------------------------------------------------
+# Candidate algorithms — train_candidate() reads each entry. The benchmark
+# trains all five, then promote_top_two() picks:
+#   Tier 1 = highest PR-AUC among `family=gbm` (XGBoost / LightGBM / CatBoost)
+#   Tier 2 = highest PR-AUC among `family=bagging` (RandomForest / ExtraTrees)
+# This gives the jury-defensible "different inductive bias per tier" story.
+# ---------------------------------------------------------------------------
+candidates:
+  # Hyperparams below are Optuna-tuned (seed=42, 2026-05-25) — they replaced the
+  # original hand-tuned literals. Re-running with tuning.enabled=false reproduces
+  # the tuned benchmark: Tier 1 (lightgbm) val PR-AUC 0.891 / test 0.900, Tier 2
+  # (random_forest) val 0.868 / test 0.883. To re-search, flip tuning.enabled=true.
+  - name: xgboost
+    algorithm: xgboost
+    hyperparams:
+      objective: binary:logistic
+      eval_metric: aucpr
+      tree_method: hist
+      n_estimators: 2000
+      max_depth: 7
+      learning_rate: 0.07348118405270448
+      subsample: 0.8832290311184181
+      colsample_bytree: 0.608233797718321
+      colsample_bynode: 0.8
+      min_child_weight: 49
+      reg_alpha: 2.1368329072358767
+      reg_lambda: 0.0070689749506246055
+      gamma: 0.1
+      early_stopping_rounds: 50
+      random_state: 42
+
+  - name: lightgbm
+    algorithm: lightgbm
+    hyperparams:
+      num_leaves: 244
+      max_depth: -1
+      learning_rate: 0.023688639503640783
+      n_estimators: 2000
+      feature_fraction: 0.892797576724562
+      bagging_fraction: 0.8394633936788146
+      bagging_freq: 5
+      reg_alpha: 0.004207053950287938
+      reg_lambda: 0.0017073967431528124
+      min_child_samples: 8
+      early_stopping_rounds: 50
+      random_state: 42
+
+  - name: catboost
+    algorithm: catboost
+    hyperparams:
+      depth: 5
+      learning_rate: 0.06798962421591129
+      iterations: 2000
+      l2_leaf_reg: 1.5199348301309807
+      bagging_temperature: 0.18340450985343382
+      early_stopping_rounds: 50
+      random_state: 42
+
+  - name: random_forest
+    algorithm: random_forest
+    hyperparams:
+      n_estimators: 250
+      max_depth: 19
+      min_samples_leaf: 8
+      min_samples_split: 15
+      class_weight: balanced_subsample
+      max_features: sqrt
+      bootstrap: true
+      random_state: 42
+
+  - name: extra_trees
+    algorithm: extra_trees
+    hyperparams:
+      n_estimators: 700
+      max_depth: 19
+      min_samples_leaf: 2
+      min_samples_split: 21
+      class_weight: balanced_subsample
+      max_features: 0.5
+      bootstrap: false
+      random_state: 42
+
+# ---------------------------------------------------------------------------
+# Paths — relative to ML-Service/ root.
+# ---------------------------------------------------------------------------
+paths:
+  raw_dir: data/raw
+  features_dir: data/features
+  artifacts_dir: artifacts
+  rules_yaml: config/rules.yaml
+  report_md: training_report.md

@@ -1,0 +1,17 @@
+# CBS simulator on port 8082 owning cbs_db (ddl-auto=create so DataInitializer re-seeds deterministic demo data on each boot).
+server:
+  port: 8082
+
+spring:
+  application:
+    name: cbs-simulator
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/cbs_db}
+    driver-class-name: org.postgresql.Driver
+    username: cbs_user
+    password: ${CBS_DB_PASSWORD:cbs_dev_password}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: create
+    show-sql: false

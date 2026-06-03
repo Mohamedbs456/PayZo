@@ -1,0 +1,234 @@
+services:
+
+  # ─── PostgreSQL ────────────────────────────────────────────────────────────
+  postgres-db:
+    image: postgres:16
+    container_name: postgres-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: payzo_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-gg}
+      POSTGRES_DB: payzo_db
+      KC_DB_PASSWORD: ${KC_DB_PASSWORD:-keycloak_dev_password}
+      CBS_DB_PASSWORD: ${CBS_DB_PASSWORD:-cbs_dev_password}
+    volumes:
+      - payzo-db-data:/var/lib/postgresql/data
+      - ./Postgres-DB/init.sh:/docker-entrypoint-initdb.d/init.sh:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U payzo_user -d payzo_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - payzo-net
+
+  # ─── Keycloak ──────────────────────────────────────────────────────────────
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    container_name: keycloak
+    restart: unless-stopped
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres-db:5432/keycloak_db
+      KC_DB_USERNAME: keycloak_user
+      KC_DB_PASSWORD: ${KC_DB_PASSWORD:-keycloak_dev_password}
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD:-admin}
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD:-admin}
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_LOG_LEVEL: INFO
+    command: ["start-dev", "--import-realm", "--health-enabled=true"]
+    volumes:
+      - ./Keycloak/realms:/opt/keycloak/data/import:ro
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/8080 && echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && timeout 3 cat <&3 | grep -q UP"]
+      interval: 20s
+      timeout: 10s
+      retries: 15
+      start_period: 90s
+    networks:
+      - payzo-net
+
+  # ─── Spring Boot Backend ───────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: backend
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/payzo_db
+      KEYCLOAK_AUTH_SERVER_URL: http://keycloak:8080
+      DB_PASSWORD: ${DB_PASSWORD:-gg}
+      KC_CLIENTS_SECRET: ${KC_CLIENTS_SECRET:}
+      KC_BACKOFFICE_SECRET: ${KC_BACKOFFICE_SECRET:}
+      PAYZO_EMAIL: ${PAYZO_EMAIL:-payzo.bank@gmail.com}
+      PAYZO_EMAIL_APP_PASSWORD: ${PAYZO_EMAIL_APP_PASSWORD:}
+      # Spring binds spring.mail.username/password from these env vars (kebab
+      # → underscore convention); plus we feed the same creds back through
+      # the canonical SPRING_MAIL_* vars so anything reading those works too.
+      SPRING_MAIL_USERNAME: ${PAYZO_EMAIL:-payzo.bank@gmail.com}
+      SPRING_MAIL_PASSWORD: ${PAYZO_EMAIL_APP_PASSWORD:}
+      # Live Vonage credentials — used to deliver OTPs over SMS. Override in
+      # production via .env. OTP_DELIVERY_ENABLED below controls whether they
+      # actually fire (false → SmsService logs to console only).
+      VONAGE_API_KEY: ${VONAGE_API_KEY:}
+      VONAGE_API_SECRET: ${VONAGE_API_SECRET:}
+      VONAGE_FROM: ${VONAGE_FROM:-PayZo}
+      ML_ENABLED: ${ML_ENABLED:-true}
+      # Real email delivery in dev — flip to false to fall back to log-only.
+      OTP_DELIVERY_ENABLED: ${OTP_DELIVERY_ENABLED:-true}
+      # Keycloak master admin — used ONLY at backend boot by
+      # KeycloakBootstrapService to self-provision a default SuperAdmin when
+      # the backoffice realm has zero. Mirrors the same KC_ADMIN_* the
+      # Keycloak container itself runs with, so it "just works" on a fresh
+      # `docker compose down -v && up`.
+      KC_ADMIN_USERNAME: admin
+      KC_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD:-admin}
+      # Default SA credentials — change in production via SA_BOOTSTRAP_*.
+      SA_BOOTSTRAP_USERNAME: ${SA_BOOTSTRAP_USERNAME:-superadmin}
+      SA_BOOTSTRAP_EMAIL: ${SA_BOOTSTRAP_EMAIL:-superadmin@payzo.local}
+      SA_BOOTSTRAP_PASSWORD: ${SA_BOOTSTRAP_PASSWORD:-Superadmin123!}
+      UPLOADS_PATH: /app/uploads
+      CBS_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/cbs_db
+      CBS_DB_PASSWORD: ${CBS_DB_PASSWORD:-cbs_dev_password}
+      ML_BASE_URL: http://ml-service:5000
+    volumes:
+      - payzo-uploads:/app/uploads
+    ports:
+      - "8081:8081"
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+      cbs-simulator:
+        condition: service_healthy
+      ml-service:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8081/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - payzo-net
+
+  # ─── CBS Simulator ─────────────────────────────────────────────────────────
+  cbs-simulator:
+    build:
+      context: ./CBS-Simulator
+      dockerfile: Dockerfile
+    container_name: cbs-simulator
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/cbs_db
+      CBS_DB_PASSWORD: ${CBS_DB_PASSWORD:-cbs_dev_password}
+    ports:
+      - "8082:8082"
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8082/cbs/api/v1/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - payzo-net
+
+  # ─── ML Service ────────────────────────────────────────────────────────────
+  ml-service:
+    build:
+      context: ./ML-Service
+      dockerfile: Dockerfile
+    container_name: ml-service
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./ML-Service/artifacts:/app/artifacts
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:5000/ml/api/v1/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 15s
+    networks:
+      - payzo-net
+
+  # ─── Client Web App (Vite dev server with HMR) ───────────────────────────
+  # Dockerfile.dev + bind-mount of ./Client-Web-App into /app so source edits
+  # hot-reload in the browser without a rebuild. node_modules lives in a named
+  # volume to avoid host/container OS collisions on Windows/WSL2.
+  client-web-app:
+    build:
+      context: ./Client-Web-App
+      dockerfile: Dockerfile.dev
+    container_name: client-web-app
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:5173/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    environment:
+      NODE_ENV: development
+      VITE_API_BASE_URL: ${VITE_CLIENT_API_BASE_URL:-http://localhost:8081/api/v1}
+      VITE_HEALTH_URL: ${VITE_CLIENT_HEALTH_URL:-http://localhost:8081/actuator/health}
+      VITE_KEYCLOAK_URL: ${VITE_CLIENT_KEYCLOAK_URL:-http://localhost:8080}
+      VITE_KEYCLOAK_REALM: ${VITE_CLIENT_KEYCLOAK_REALM:-clients}
+      VITE_KEYCLOAK_CLIENT_ID: ${VITE_CLIENT_KEYCLOAK_CLIENT_ID:-payzo-client-app}
+      # WSL2 + Windows host bind mounts don't propagate native FS events
+      # into the container, so Vite needs polling to notice file changes.
+      CHOKIDAR_USEPOLLING: "true"
+    volumes:
+      - ./Client-Web-App:/app
+      - client-web-app-node-modules:/app/node_modules
+    ports:
+      - "5173:5173"
+    networks:
+      - payzo-net
+
+  # ─── Nginx Reverse Proxy ───────────────────────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    volumes:
+      - ./NGINX/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - client-web-app
+    networks:
+      - payzo-net
+
+# ─── Networks ─────────────────────────────────────────────────────────────────
+networks:
+  payzo-net:
+    driver: bridge
+
+# ─── Volumes ──────────────────────────────────────────────────────────────────
+volumes:
+  payzo-db-data:
+  payzo-uploads:
+  client-web-app-node-modules:

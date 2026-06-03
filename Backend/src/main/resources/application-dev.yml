@@ -1,0 +1,85 @@
+spring:
+  jpa:
+    hibernate:
+      # `update` (vs `create`) so the schema and data persist across normal
+      # container restarts. The DB still gets wiped when the volume is
+      # explicitly deleted (`docker compose down -v`). Hibernate adds new
+      # columns automatically; entity rename / drop still requires a manual
+      # reset, which is the same trade-off Liquibase/Flyway would impose.
+      ddl-auto: update
+    show-sql: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/clients
+
+  # SMTP — Gmail needs StartTLS on 587 + the App Password without spaces.
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: payzo.bank@gmail.com
+    password: ${PAYZO_EMAIL_APP_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+        transport:
+          protocol: smtp
+        debug: false
+keycloak:
+  auth-server-url: ${KEYCLOAK_AUTH_SERVER_URL:http://localhost:8080}
+  realms:
+    clients:
+      realm: clients
+      client-id: payzo-backend
+      client-secret: ${KC_CLIENTS_SECRET:}
+    backoffice:
+      realm: backoffice
+      client-id: payzo-backend-bo
+      client-secret: ${KC_BACKOFFICE_SECRET:}
+
+vonage:
+  api-key: ${VONAGE_API_KEY:dev-placeholder}
+  api-secret: ${VONAGE_API_SECRET:dev-placeholder}
+  from: PayZo
+
+cbs:
+  base-url: http://localhost:8082
+
+ml:
+  enabled: false
+  base-url: http://localhost:5000
+
+otp:
+  delivery:
+    # `true` makes the NotificationService actually send emails (and SMS, if
+    # Vonage is configured). `false` falls back to log-only mode.
+    enabled: true
+
+uploads:
+  path: ./uploads
+
+# ─── Demo seeding (PFE jury fixture data) ───────────────────────────────────
+# When true, DemoSeedService pre-stages three deterministic sender profiles
+# (student, business, coffeeshop) + three saved recipients + one CBS-only mule
+# + 30-day APPROVED transaction backlog. Idempotent (skips if already seeded).
+# Defaults to false in application.yml and stays false in prod.
+payzo:
+  demo:
+    seed:
+      enabled: true
+
+management:
+  health:
+    mail:
+      enabled: false
+
+logging:
+  level:
+    com.payzo: DEBUG
+    org.hibernate.SQL: DEBUG

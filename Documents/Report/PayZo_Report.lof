@@ -1,0 +1,33 @@
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces \xpg@aux {}{english}\ignorespaces Proxym-IT: host organisation}}{2}{figure.caption.10}%
+\contentsline {figure}{\numberline {1.2}{\ignorespaces \xpg@aux {}{english}\ignorespaces Reviewed existing solutions: N26, Emma, Feedzai, and Plaid}}{3}{figure.caption.11}%
+\contentsline {figure}{\numberline {1.3}{\ignorespaces \xpg@aux {}{english}\ignorespaces PayZo: proposed solution}}{4}{figure.caption.13}%
+\contentsline {figure}{\numberline {1.4}{\ignorespaces \xpg@aux {}{english}\ignorespaces 2TUP Y-process}}{5}{figure.caption.14}%
+\contentsline {figure}{\numberline {1.5}{\ignorespaces \xpg@aux {}{english}\ignorespaces Gantt chart}}{6}{figure.caption.15}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces \xpg@aux {}{english}\ignorespaces Global use case diagram}}{11}{figure.caption.18}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces \xpg@aux {}{english}\ignorespaces Client use case diagram}}{12}{figure.caption.19}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces \xpg@aux {}{english}\ignorespaces Admin use case diagram}}{14}{figure.caption.22}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces \xpg@aux {}{english}\ignorespaces Analyst use case diagram}}{15}{figure.caption.25}%
+\contentsline {figure}{\numberline {2.5}{\ignorespaces \xpg@aux {}{english}\ignorespaces SuperAdmin use case diagram}}{16}{figure.caption.27}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces \xpg@aux {}{english}\ignorespaces Full system architecture}}{19}{figure.caption.30}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces \xpg@aux {}{english}\ignorespaces CBS class diagram}}{20}{figure.caption.31}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces \xpg@aux {}{english}\ignorespaces PayZo class diagram}}{21}{figure.caption.32}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces \xpg@aux {}{english}\ignorespaces Registration sequence}}{22}{figure.caption.33}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces \xpg@aux {}{english}\ignorespaces Login sequence}}{23}{figure.caption.34}%
+\contentsline {figure}{\numberline {3.6}{\ignorespaces \xpg@aux {}{english}\ignorespaces Forgot password sequence}}{24}{figure.caption.35}%
+\contentsline {figure}{\numberline {3.7}{\ignorespaces \xpg@aux {}{english}\ignorespaces Registration approval sequence}}{25}{figure.caption.36}%
+\contentsline {figure}{\numberline {3.8}{\ignorespaces \xpg@aux {}{english}\ignorespaces Peer transfer sequence}}{26}{figure.caption.37}%
+\contentsline {figure}{\numberline {3.9}{\ignorespaces \xpg@aux {}{english}\ignorespaces Fraud alert review sequence}}{27}{figure.caption.38}%
+\contentsline {figure}{\numberline {3.10}{\ignorespaces \xpg@aux {}{english}\ignorespaces SuperAdmin sequence}}{28}{figure.caption.39}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces \xpg@aux {}{english}\ignorespaces Three-layer scoring orchestrator}}{33}{figure.caption.46}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces \xpg@aux {}{english}\ignorespaces Client web application: client login page}}{37}{figure.caption.51}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces \xpg@aux {}{english}\ignorespaces Client web application: home page}}{37}{figure.caption.52}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces \xpg@aux {}{english}\ignorespaces Client mobile application: main screens}}{38}{figure.caption.53}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces \xpg@aux {}{english}\ignorespaces SuperAdmin: banks management}}{39}{figure.caption.54}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces \xpg@aux {}{english}\ignorespaces Admin: clients list}}{40}{figure.caption.55}%
+\contentsline {figure}{\numberline {5.6}{\ignorespaces \xpg@aux {}{english}\ignorespaces Analyst: fraud alert queue}}{40}{figure.caption.56}%
+\contentsline {figure}{\numberline {5.7}{\ignorespaces \xpg@aux {}{english}\ignorespaces Docker Desktop: the full PayZo stack running as containers}}{42}{figure.caption.58}%

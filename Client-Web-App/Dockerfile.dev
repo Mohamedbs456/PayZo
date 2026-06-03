@@ -1,0 +1,21 @@
+# Vite dev server for the PayZo client frontend.
+# Source is bind-mounted at /app via docker-compose; node_modules lives in a
+# named volume so host/container OS differences don't collide.
+FROM node:22-alpine
+
+WORKDIR /app
+
+# git is needed by some npm postinstall scripts.
+RUN apk add --no-cache git
+
+# COPY package*.json so the build doesn't fail when no package-lock.json
+# exists yet (first build). After the first successful run, the bind mount
+# writes the lockfile back to the host so subsequent installs are fast.
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+EXPOSE 5173
+
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
