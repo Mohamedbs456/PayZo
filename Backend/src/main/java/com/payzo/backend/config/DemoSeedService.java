@@ -96,6 +96,11 @@ public class DemoSeedService {
     /** Deterministic seed so re-running produces identical history. */
     private static final long RANDOM_SEED = 42_99_42L;
 
+    // Realistic transfer motifs for seeded history (mostly blank, like real P2P transfers).
+    private static final String[] HISTORY_MOTIFS = {
+            null, null, null, null, null, null, "Remboursement", "Loyer", "Courses",
+            "Merci", "Café", "Restaurant", "Cadeau", "Facture", "Essence", "Taxi"};
+
     // ── Hour-of-day weight tables per archetype (24 entries each). ──────────
     private static final double[] EVENING_HOURS = normalize(new double[]{
             0.005, 0.005, 0.003, 0.002, 0.002, 0.003,    // 00-05
@@ -429,7 +434,7 @@ public class DemoSeedService {
             tx.setStatus(TransactionStatus.APPROVED);
             tx.setSourceBalanceBefore(sender.openingBalance);
             tx.setDestBalanceBefore(new BigDecimal("500.00"));
-            tx.setMotif("Demo history");
+            tx.setMotif(HISTORY_MOTIFS[rng.nextInt(HISTORY_MOTIFS.length)]);
 
             tx = transactionRepository.save(tx);
             historicalStamps.add(Map.entry(tx.getId(), ts));

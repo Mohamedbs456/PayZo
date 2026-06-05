@@ -52,14 +52,13 @@ cbs:
   base-url: http://localhost:8082
 
 ml:
-  enabled: false
+  enabled: true
   base-url: http://localhost:5000
 
 otp:
   delivery:
-    # `true` makes the NotificationService actually send emails (and SMS, if
-    # Vonage is configured). `false` falls back to log-only mode.
-    enabled: true
+    # false -> log-only mode (OTP prints as [OTP DEV] ...); true sends real email/SMS.
+    enabled: false
 
 uploads:
   path: ./uploads

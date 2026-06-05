@@ -88,6 +88,16 @@ public class FraudDetectionService {
             receiverGov = clientRepository.findByCin(transaction.getDestClientCin())
                     .map(Client::getGovernorate)
                     .orElse(null);
+            if (receiverGov == null) {
+                // External/CBS-only recipient: resolve governorate from CBS so distance still computes.
+                try {
+                    receiverGov = cbsIntegrationService.findClientByCin(transaction.getDestClientCin())
+                            .map(CbsIntegrationService.CbsClientData::governorate)
+                            .orElse(null);
+                } catch (Exception ex) {
+                    log.debug("CBS governorate lookup failed for dest CIN {}", transaction.getDestClientCin(), ex);
+                }
+            }
         }
         double distanceKm = GovernorateLookup.haversineKm(senderGov, receiverGov);
 
@@ -103,6 +113,9 @@ public class FraudDetectionService {
                         sender.getId(),
                         thirtyDaysAgo,
                         List.of(TransactionStatus.REJECTED, TransactionStatus.CANCELLED));
+
+        // Exclude the row being scored — per-user features must be strictly backward-looking.
+        window30d.removeIf(t -> t.getId().equals(transaction.getId()));
 
         OffsetDateTime twentyFourHoursAgo = now.minusHours(24);
         List<Transaction> recent24h = new ArrayList<>();
