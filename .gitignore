@@ -102,3 +102,8 @@ _defense/
 
 # ─── Stray scratch files ──────────────────────────────────────────────────────
 $null
+
+# ML large artifacts & data (too large for GitHub)
+ML-Service/_artifacts*/
+ML-Service/data/features/
+*.parquet

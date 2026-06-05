@@ -1,6 +1,6 @@
 <mxfile host="Electron">
   <diagram name="Payzo Architecture" id="R_xtAbhVi1ZUg3Bd6qk0">
-    <mxGraphModel dx="1084" dy="659" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="234" dy="142" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -154,8 +154,8 @@
         <mxCell id="YlXgRUVPgoJtP0BYiYx--37" parent="1" style="text;html=1;align=right;verticalAlign=middle;" value="&lt;font style=&quot;font-size: 8px; color: rgb(0, 0, 0);&quot;&gt;Backoffice&lt;/font&gt;" vertex="1">
           <mxGeometry height="13.75" width="40" x="1188" y="369.21000000000004" as="geometry" />
         </mxCell>
-        <mxCell id="YlXgRUVPgoJtP0BYiYx--38" parent="1" style="text;html=1;align=right;verticalAlign=middle;" value="&lt;font style=&quot;font-size: 8px; color: rgb(0, 0, 0);&quot;&gt;Client App&lt;/font&gt;" vertex="1">
-          <mxGeometry height="17.5" width="40" x="1188" y="430.71000000000004" as="geometry" />
+        <mxCell id="YlXgRUVPgoJtP0BYiYx--38" parent="1" style="text;html=1;align=right;verticalAlign=middle;" value="&lt;font style=&quot;font-size: 8px; color: rgb(0, 0, 0);&quot;&gt;End User&lt;/font&gt;" vertex="1">
+          <mxGeometry height="12.36" width="36" x="1188" y="433.82" as="geometry" />
         </mxCell>
         <mxCell id="YlXgRUVPgoJtP0BYiYx--40" parent="1" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=none;verticalAlign=top;aspect=fixed;imageAspect=0;editableCssRules=.*;image=data:image/svg+xml,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iODAwIiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0Ij4mI3hhOyAgIDxjaXJjbGUgY3g9IjUxMiIgY3k9IjUxMiIgcj0iNTEyIiBzdHlsZT0iZmlsbDojMDA4YWFhIi8+JiN4YTsgICA8cGF0aCBkPSJNNzg2LjIgMzk1LjVoLTgwLjZjLTEuNSAwLTMtLjgtMy43LTIuMWwtNjQuNy0xMTIuMmMtLjgtMS4zLTIuMi0yLjEtMy44LTIuMWgtMjY0Yy0xLjUgMC0zIC44LTMuNyAyLjFsLTY3LjMgMTE2LjQtNjQuOCAxMTIuMmMtLjcgMS4zLS43IDIuOSAwIDQuM2w2NC44IDExMi4yIDY3LjIgMTE2LjVjLjcgMS4zIDIuMiAyLjIgMy43IDIuMWgyNjQuMWMxLjUgMCAzLS44IDMuOC0yLjFMNzAyIDYzMC42Yy43LTEuMyAyLjItMi4yIDMuNy0yLjFoODAuNmMyLjcgMCA0LjgtMi4yIDQuOC00LjhWNDAwLjRjLS4xLTIuNy0yLjMtNC45LTQuOS00Ljl6TTQ3Ny41IDYzMC42bC0yMC4zIDM1Yy0uMy41LS44IDEtMS4zIDEuMy0uNi4zLTEuMi41LTEuOS41aC00MC4zYy0xLjQgMC0yLjctLjctMy4zLTJsLTYwLjEtMTA0LjMtNS45LTEwLjMtMjEuNi0zNi45Yy0uMy0uNS0uNS0xLjEtLjQtMS44IDAtLjYuMi0xLjMuNS0xLjhsMjEuNy0zNy42IDY1LjktMTE0Yy43LTEuMiAyLTIgMy4zLTJINDU0Yy43IDAgMS40LjIgMi4xLjUuNS4zIDEgLjcgMS4zIDEuM2wyMC4zIDM1LjJjLjYgMS4yLjUgMi43LS4yIDMuOGwtNjUuMSAxMTIuOGMtLjMuNS0uNCAxLjEtLjQgMS42IDAgLjYuMiAxLjEuNCAxLjZsNjUuMSAxMTIuN2MuOSAxLjUuOCAzLjEgMCA0LjR6bTIwMi4xLTExNi43TDY1OCA1NTAuOGwtNS45IDEwLjNMNTkyIDY2NS40Yy0uNyAxLjItMS45IDItMy4zIDJoLTQwLjNjLS43IDAtMS4zLS4yLTEuOS0uNS0uNS0uMy0xLS43LTEuMy0xLjNsLTIwLjMtMzVjLS45LTEuMy0uOS0yLjktLjEtNC4ybDY1LjEtMTEyLjdjLjMtLjUuNC0xLjEuNC0xLjYgMC0uNi0uMi0xLjEtLjQtMS42bC02NS4xLTExMi44Yy0uNy0xLjItLjgtMi42LS4yLTMuOGwyMC4zLTM1LjJjLjMtLjUuOC0xIDEuMy0xLjMuNi0uNCAxLjMtLjUgMi4xLS41aDQwLjRjMS40IDAgMi43LjcgMy4zIDJsNjUuOSAxMTQgMjEuNyAzNy42Yy4zLjYuNSAxLjIuNSAxLjggMCAuNC0uMiAxLS41IDEuNnoiIHN0eWxlPSJmaWxsOiNmZmYiLz4mI3hhOzwvc3ZnPg==;fontSize=10;strokeWidth=0;fontColor=light-dark(#000000,#FFFFFF);labelBorderColor=none;whiteSpace=wrap;autosizeText=0;spacing=-3;connectable=0;" value="backoffice&#xa;realm" vertex="1">
           <mxGeometry height="50" width="50" x="429.12" y="424.87" as="geometry" />

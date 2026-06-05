@@ -1,0 +1,259 @@
+%==============================================================
+%  PayZo — BOOK COVER WRAPPER  (front + spine + back)
+%  Compile with LuaLaTeX — run TWICE for correct positioning.
+%
+%  Give this PDF to the printer for the cardstock cover.
+%  Give PayZo_Report.pdf (55 pages) for the interior block.
+%
+%  ┌─────────────────────────────────────────────────────────┐
+%  │  !! ONE VALUE TO CONFIRM WITH YOUR PRINTER !!           │
+%  │  \spinewidth below. Current estimate: 6mm               │
+%  │  (55 sheets × 0.105mm/sheet ≈ 5.8mm, rounded to 6mm)   │
+%  │  Printer may adjust once they measure their own stock.  │
+%  └─────────────────────────────────────────────────────────┘
+%==============================================================
+
+%% ─── SPINE WIDTH — EDIT THIS ONE VALUE IF PRINTER ASKS ──────
+\newcommand{\SpineW}{6}          % spine width in mm
+%% ─────────────────────────────────────────────────────────────
+
+\documentclass{article}
+
+\usepackage{iftex}
+\ifPDFTeX
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\else
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\setsansfont{Latin Modern Sans}
+\fi
+
+% Paper = back cover (210mm) + spine + front cover (210mm)
+\usepackage{ifthen}
+\usepackage[%
+paperwidth=\dimexpr 420mm + \SpineW mm\relax,%
+paperheight=297mm,%
+margin=0pt, nohead, nofoot%
+]{geometry}
+
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{setspace}
+\usepackage{microtype}
+\pagestyle{empty}
+\setstretch{1.1}
+
+% ── Brand colours (updated aesthetic) ────────────
+\definecolor{pznavy}{HTML}{1F3A5F}
+\definecolor{pzpurple}{HTML}{660066} 
+\definecolor{pzcream}{HTML}{F1FAEE}
+\definecolor{pzdark}{HTML}{182C49}
+
+% ── Convenience lengths ───────────────────────────────────────
+\newlength{\CoverW}  \setlength{\CoverW}{210mm}     
+\newlength{\SpineWL} \setlength{\SpineWL}{\SpineW mm}
+\newlength{\FrontX}  \setlength{\FrontX}{\dimexpr\CoverW+\SpineWL\relax}
+\newlength{\SpineCX} \setlength{\SpineCX}{\dimexpr\CoverW+\SpineWL/2\relax}
+
+%==============================================================
+\begin{document}
+	\null 
+	
+	\begin{tikzpicture}[remember picture, overlay]
+		
+		%% ════════════════════════════════════════════════════════════
+		%%  FULL SPREAD — cream background
+		%% ════════════════════════════════════════════════════════════
+		\fill[pzcream] (current page.north west) rectangle (current page.south east);
+		
+		%% ════════════════════════════════════════════════════════════
+		%%  SPINE
+		%% ════════════════════════════════════════════════════════════
+		% Navy background
+		\fill[pznavy]
+		($(current page.north west)+(\CoverW,0)$)
+		rectangle
+		($(current page.south west)+(\FrontX,0)$);
+		
+		% Purple hairlines on both edges
+		\draw[pzpurple, line width=0.6pt]
+		($(current page.north west)+(\CoverW,0)$) --
+		($(current page.south west)+(\CoverW,0)$);
+		\draw[pzpurple, line width=0.6pt]
+		($(current page.north west)+(\FrontX,0)$) --
+		($(current page.south west)+(\FrontX,0)$);
+		
+		% Spine text — reads top-to-bottom (cooler, modernized layout)
+		\node[rotate=-90, text=pzcream, font=\small\sffamily, anchor=center]
+		at ($(current page.north west)+(\SpineCX,-148.5mm)$)
+		{\textbf{\MakeUppercase{PayZo}}%
+			\hspace{0.8cm}{\color{pzpurple}\rule{0.8cm}{1.2pt}}\hspace{0.8cm}%
+			\textit{Fraud Detection in Banking Transactions}%
+			\hspace{0.8cm}{\color{pzpurple}\rule{0.8cm}{1.2pt}}\hspace{0.8cm}%
+			\textbf{Mohamed Ben Salem}%
+			\hspace{0.8cm}2025/2026};
+		
+		%% ════════════════════════════════════════════════════════════
+		%%  FRONT COVER  (right 210mm panel)
+		%% ════════════════════════════════════════════════════════════
+		% Top navy strip (15mm) + purple hairline (0.6mm)
+		\fill[pzdark]
+		($(current page.north west)+(\FrontX,0)$)
+		rectangle ($(current page.north east)+(0,-15mm)$);
+		\fill[pzpurple]
+		($(current page.north west)+(\FrontX,-15mm)$)
+		rectangle ($(current page.north east)+(0,-15.6mm)$);
+		
+		% Programme code top-right
+		\node[anchor=east, text=pzcream, font=\small\sffamily\bfseries]
+		at ($(current page.north east)+(-11mm,-7.5mm)$)
+		{LGLSI-3-26-17};
+		
+		% Front cover content panel (below the strip)
+	\node[anchor=north west, inner sep=0pt]
+	at ($(current page.north west)+(\FrontX+4mm,-15.6mm)$) {%
+			\begin{minipage}[t][281.4mm][s]{\CoverW}
+				\centering
+				\vspace*{0.35cm}
+				
+				%% institution header ──────────────────────────────────
+				\noindent
+				\begin{minipage}[c]{0.17\linewidth}
+					\centering\includegraphics[height=2.5cm]{uni.png}
+				\end{minipage}\hfill
+				\begin{minipage}[c]{0.62\linewidth}
+					\centering
+					{\footnotesize\color{pzdark}\textbf{Tunisian Republic}\\[2pt]
+						Ministry of Higher Education and Scientific Research\\[5pt]
+						\textbf{University of Monastir}\\[1pt]
+						\textbf{Faculty of Sciences of Monastir}}
+				\end{minipage}\hfill
+				\begin{minipage}[c]{0.17\linewidth}
+					\centering\includegraphics[height=2.2cm]{fsm.png}
+				\end{minipage}
+				
+				\vspace{12pt}
+				\noindent{\color{pzdark!55}\rule{\linewidth}{1.9pt}}
+				
+				\vspace{0.4cm}
+				
+				%% report type ────────────────────────────────────────
+				{\small\color{pzdark!90}\MakeUppercase{Final Year Internship Report}}\\[4pt]
+				{\footnotesize\color{black!75}%
+					in fulfilment of the requirements for the Bachelor's Degree\\[1pt]
+					in Software Engineering and Information Systems}
+				
+				\vspace{40pt} 
+				
+				%% hero block ─────────────────────────────────────────
+				\includegraphics[height=2.5cm]{PayzoCover.png}\\[8pt]
+				{\color{pznavy}\rule{10cm}{1.2pt}}\\[25pt]
+				{\fontsize{38}{42}\selectfont\bfseries\color{pzdark}Fraud Detection}\\[8pt]
+				{\LARGE\color{pznavy}in Banking Transactions}\\[15pt]
+				{\color{pznavy}\rule{10cm}{1.2pt}}
+				
+				\vspace{1.5cm}
+				
+				%% people block ───────────────────────────────────────
+				{\small\color{black!55}\MakeUppercase{Prepared by}}\\[5pt]
+				{\LARGE\color{pzdark}\bfseries Mohamed Ben Salem}\\[25pt]
+				{\large\color{black!70}Defended on 13 June 2026 at 12:30, Amphi 3}\\[20pt]
+				
+				{\small\color{black!55}\MakeUppercase{Jury}}\\[10pt]
+				{\large\color{black!70}President}\;\;{\large\color{pzdark}\bfseries Mohamed Neji Maatouk}\\[8pt]
+				{\large\color{black!70}Reviewer}\;\;{\large\color{pzdark}\bfseries Nizar Kerkeni}\\[8pt]
+				{\large\color{black!70}Academic Supervisor}\;\;{\large\color{pzdark}\bfseries Mohsen Maraoui}\\[8pt]
+				{\large\color{black!70}Professional Supervisor}\;\;{\large\color{pzdark}\bfseries Chaima Zaier}
+				
+				\vspace*{2.5cm} 
+			\end{minipage}%
+		};
+		
+		%% ── bottom three elements (Spaced Row, Lower Position) ────────
+		% QR code (center anchor)
+		\coordinate (qrc) at ($(current page.south east)+(-0.5*\CoverW+8mm, 1.2)$); % Lowered to 1.2
+		
+		% QR Code and Text
+		\node[anchor=south, text=pzdark!60, font=\scriptsize] at ($(qrc)+(0,2.7)$) {Scan for source code};
+		\node[anchor=south] at (qrc) {\includegraphics[width=2.6cm]{qr.png}};
+		
+		% Host organisation (further left of QR)
+		\node[anchor=south east, align=center] at ($(qrc)+(-4.0, 0.4)$) % Increased offset to 4.0
+		{{\color{pzdark!60}\footnotesize\MakeUppercase{Hosted at}}\\[5pt]%
+			\includegraphics[height=0.85cm]{proxym.png}};
+		
+		% Academic year (further right of QR)
+		\node[anchor=south west, align=center] at ($(qrc)+(4.0, 0.4)$) % Increased offset to 4.0
+		{{\color{pzdark!60}\footnotesize\MakeUppercase{Academic Year}}\\[3pt]%
+			{\color{pzdark}\large\bfseries 2025\,/\,2026}};
+		
+		%% ════════════════════════════════════════════════════════════
+		%%  BACK COVER  (left 210mm panel)
+		%% ════════════════════════════════════════════════════════════
+		\fill[pzpurple]
+		(current page.north west)
+		rectangle ($(current page.north west)+(\CoverW,-1.2mm)$);
+		
+		\fill[pzdark]
+		(current page.south west)
+		rectangle ($(current page.south west)+(\CoverW,18mm)$);
+		\fill[pzpurple]
+		($(current page.south west)+(0,18mm)$)
+		rectangle ($(current page.south west)+(\CoverW,18.6mm)$);
+		
+		\node[text=pzcream, font=\footnotesize\sffamily, anchor=west]
+		at ($(current page.south west)+(8mm,9mm)$)
+		{Faculty of Sciences of Monastir\quad|\quad 2025\,/\,2026};
+		\node[anchor=east]
+		at ($(current page.south west)+(\CoverW-6mm,9mm)$)
+		{\includegraphics[height=0.7cm]{fsm.png}};
+		
+		\node[anchor=north west, inner sep=0pt]
+		at ($(current page.north west)+(0,-1.2mm)$) {%
+			\begin{minipage}[t][277.8mm][s]{\CoverW}
+				\centering
+				\vspace*{35mm}
+				
+				%% Author bio style side-by-side layout
+				\begin{minipage}{0.85\linewidth}
+					% Left: Logo
+					\begin{minipage}[t]{0.28\linewidth}
+						\vspace{0pt} % Aligns the tops of both minipages perfectly
+						\includegraphics[width=0.7\linewidth]{payzo.png}
+					\end{minipage}\hfill
+					% Right: Abstract paragraph
+					\begin{minipage}[t]{0.68\linewidth}
+						\vspace{0pt}
+						{\small\color{pzdark!80}\setstretch{1.4}%
+							\textbf{PayZo} is a Tunisian digital-banking platform that unifies
+							multi-bank account management and protects peer-to-peer transfers
+							through a three-layer machine-learning fraud detection system.
+							The primary scorer is a calibrated LightGBM model
+							(PR-AUC~0.90,\ ROC-AUC~0.99);
+							a Random Forest backup and a rule-based firewall ensure the platform
+							always produces a risk decision.
+							High-risk transfers are suspended and routed to an analyst review
+							queue\,---\,a human makes the final call on every fraud alert.\par}
+					\end{minipage}
+				\end{minipage}
+				
+				\vspace{20mm}
+				{\color{pzdark!25}\rule{8cm}{0.5pt}}
+				
+				\vfill
+				
+				{\footnotesize\color{pzdark!60}%
+					\textbf{Keywords:}~~digital banking~~·~~fraud detection~~·~~%
+					machine learning~~·~~P2P transfer~~·~~Tunisia}
+				
+				\vspace*{19mm}   
+			\end{minipage}%
+		};
+		
+	\end{tikzpicture}
+\end{document}

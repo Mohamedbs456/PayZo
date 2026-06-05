@@ -109,7 +109,11 @@
 % ---------- Hyperlinks (subtle coloured) ----------
 \usepackage{hyperref}
 \hypersetup{colorlinks=true,linktoc=all,
-  linkcolor=pznavy,citecolor=pznavy,urlcolor=pznavy,filecolor=pznavy}
+  linkcolor=pznavy,citecolor=pznavy,urlcolor=pznavy,filecolor=pznavy,
+  pdftitle={Fraud Detection in Banking Transactions},
+  pdfauthor={Mohamed Ben Salem},
+  pdfsubject={PFE -- Faculty of Sciences of Monastir 2025/2026},
+  pdfkeywords={digital banking, fraud detection, machine learning, P2P transfer, Tunisia}}
 \usepackage{bookmark}
 \usepackage{url}              % URL line-breaking in webography
 \usepackage{comment}          % block-comment the LaTeX cover (faculty cover used instead)
@@ -145,11 +149,11 @@
   % --- bottom contents (no band — cream background) ---
 
   % host organisation — logo (left)
-  \node[anchor=west, align=left] at ($(current page.south west)+(2.2,2.5)$)
+  \node[anchor=west, align=left] at ($(current page.south west)+(2.2,2)$)
        {{\color{pzdark!60}\footnotesize\MakeUppercase{Hosted at}}\\[5pt]%
         \includegraphics[height=0.85cm]{proxym.png}};
   % academic year (centre)
-  \node[anchor=center, align=center] at ($(current page.south)+(0.2,2.5)$)
+  \node[anchor=center, align=center] at ($(current page.south)+(0.2,2)$)
        {{\color{pzdark!60}\footnotesize\MakeUppercase{Academic Year}}\\[3pt]%
         {\color{pzdark}\large\bfseries 2025\,/\,2026}};
 
@@ -183,7 +187,7 @@
 \end{minipage}
 
 \vspace{12pt}
-\noindent{\color{pzdark!55}\rule{\linewidth}{0.8pt}}
+\noindent{\color{pzdark!55}\rule{\linewidth}{1.9pt}}
 
 \vspace{0.4cm}
 
@@ -192,20 +196,20 @@
 {\footnotesize\color{black!75}in fulfilment of the requirements for the Bachelor's Degree\\[1pt]
 in Software Engineering and Information Systems}
 
-\vspace{22pt}
+\vspace{40pt}
 
 % ---- brand + title (hero) ----
-\includegraphics[height=2.2cm]{PayzoCover.png}\\[16pt]
-{\color{pzamber}\rule{3.6cm}{1.3pt}}\\[12pt]
+\includegraphics[height=2.2cm]{PayzoCover.png}\\[5pt]
+{\color{pznavy}\rule{8.5cm}{1pt}}\\[20pt]
 {\fontsize{30}{34}\selectfont\bfseries\color{pzdark}Fraud Detection}\\[5pt]
-{\Large\color{pznavy}in Banking Transactions}\\[12pt]
-{\color{pzamber}\rule{3.6cm}{1.3pt}}
+{\Large\color{pznavy}in Banking Transactions}\\[8pt]
+{\color{pznavy}\rule{8.5cm}{1pt}}
 
-\vspace{1.5cm}
+\vspace{1cm}
 
 % ---- people ----
 {\footnotesize\color{black!55}\MakeUppercase{Prepared by}}\\[3pt]
-{\Large\color{pzdark}\bfseries Mohamed Ben Salem}\\[14pt]
+{\Large\color{pzdark}\bfseries Mohamed Ben Salem}\\[20pt]
 
 {\color{black!70}Defended on 13 June 2026 at 12:30, Amphi 3}\\[14pt]
 
@@ -254,12 +258,14 @@ in Software Engineering and Information Systems}
     \vspace{0.55cm}
 
     %% ── Reference (surah name RTL, verse number LTR) ─────────
-    \begin{Arabic}
-      \centering
-      {\normalsize  طه \ — \ 411 }   
-    \end{Arabic}
+\vspace*{\fill}
 
-    \vspace{2.0cm}
+\hspace*{0.24\textwidth}
+\begin{Arabic}
+	{\normalsize طه — 411}
+\end{Arabic}
+
+\vspace*{\fill}
 
     %% ── Divider ──────────────────────────────────────────────
     \begin{center}
@@ -273,8 +279,8 @@ in Software Engineering and Information Systems}
       \centering
       {\large اللَّهُمَّ ارْزُقْنِي عِلْمًا نَافِعًا،
                وَقَلْبًا خَاشِعًا،
-               وَلِسَانًا ذَاكِرًا.}\\[1.05em]
-      {\large اللَّهُمَّ افْتَحْ عَلَيَّ أَبْوَابَ حِكْمَتِكَ،
+               وَلِسَانًا ذَاكِرًا.\\
+      اللَّهُمَّ افْتَحْ عَلَيَّ أَبْوَابَ حِكْمَتِكَ،
                وَعَلِّمْنِي مَا يَنْفَعُنِي،
                وَانْفَعْنِي بِمَا عَلَّمْتَنِي،
                وَزِدْنِي عِلْمًا وَهُدًى وَتَوْفِيقًا.}
@@ -321,16 +327,16 @@ for their guidance and availability.
 \addcontentsline{toc}{chapter}{Acknowledgements}
 \thispagestyle{plain}
 
-I would like to express my sincere gratitude to my academic supervisor, Mr.\ Mohsen Maraoui,
-Associate Professor at the Faculty of Sciences of Monastir, for his valuable advice,
+I would like to express my sincere gratitude to my academic supervisor, \textbf{Mr.\ Mohsen Maraoui},
+Associate Professor at the \textbf{Faculty of Sciences of Monastir}, for his valuable advice,
 availability, and close follow-up throughout this project.
 
-I also thank Ms.\ Chaima Zaier, my professional supervisor at Proxym-IT, for her warm
+I also thank \textbf{Ms.\ Chaima Zaier}, my professional supervisor at \textbf{Proxym-IT}, for her warm
 welcome, her trust, and the thoughtful guidance she provided during my internship.
 
 I extend my thanks to the entire Proxym-IT team for their support and collaborative spirit.
 
-Finally, I thank the jury members, Mr.\ Mohamed Neji Maatouk and Mr.\ Nizar Kerkeni, for the
+Finally, I thank the jury members, \textbf{Mr.\ Mohamed Neji Maatouk} and \textbf{Mr.\ Nizar Kerkeni}, for the
 time they dedicated to evaluating this work.
 
 %==============================================================
@@ -348,7 +354,7 @@ simulator, a three-layer ML orchestrator, and the client and staff applications.
 side ships as a React web app and a React Native mobile app; the backoffice ships as an Electron
 desktop application. The detection model pairs a calibrated LightGBM primary scorer with a
 Random Forest fallback, trained on 500,000 synthetic transactions generated from per-user
-behavioural profiles, and reaches a PR-AUC of 0.90 on the test set. High-risk transactions are
+behavioural profiles, and reaches a PR-AUC of 0.91 on the test set. High-risk transactions are
 suspended and routed to an analyst review queue, so a human decides on every fraud alert.
 
 \vspace{6pt}
@@ -1309,7 +1315,7 @@ The payoff is measurable. An earlier iteration of the model, built before this p
 existed, plateaued at a validation PR-AUC of about 0.67: with only population-level signals it
 could not separate a transfer that is out of character for a given sender from one that is
 merely large. Introducing the per-user behavioural profiles and the eight per-user-norm
-features raised validation PR-AUC to about 0.9 --- the single largest
+features raised validation PR-AUC to about 0.87 --- the single largest
 gain in the project, and the empirical justification for the per-user design.
 
 \begin{table}[H]
@@ -1460,15 +1466,15 @@ negative class dominates the denominator. Precision-Recall does not have that pr
 \hline
 \textbf{Family} & \textbf{Algorithm} & \textbf{PR-AUC (val)} \\
 \hline
-\multirow{3}{*}{Gradient boosting} & LightGBM~[1] & 0.8908 \\
+\multirow{3}{*}{Gradient boosting} & LightGBM~[1] & 0.8716 \\
 \cline{2-3}
- & XGBoost~[2] & 0.8689 \\
+ & CatBoost~[3] & 0.8411 \\
 \cline{2-3}
- & CatBoost~[3] & 0.8653 \\
+ & XGBoost~[2] & 0.8289 \\
 \hline
-\multirow{2}{*}{Bagging} & Random Forest~[4] & 0.8682 \\
+\multirow{2}{*}{Bagging} & Random Forest~[4] & 0.8287 \\
 \cline{2-3}
- & Extra Trees~[5] & 0.8501 \\
+ & Extra Trees~[5] & 0.8109 \\
 \hline
 \end{tabular}
 \caption{Candidate benchmark (validation set)}
@@ -1514,11 +1520,11 @@ immediately. MEDIUM and HIGH transfers are suspended and routed to the analyst r
 \toprule
 \textbf{Metric} & \textbf{Layer 1 (LightGBM)} & \textbf{Layer 2 (Random Forest)} & \textbf{Layer 3 (Rules)} \\
 \midrule
-PR-AUC & 0.8995 & 0.8833 & \multirow{5}{=}{Rules-Based algorithm, always available} \\
-ROC-AUC & 0.9916 & 0.9932 & \\
-Precision & 0.9365 & 0.8670 & \\
-Recall & 0.8225 & 0.8195 & \\
-F1 & 0.8758 & 0.8425 & \\
+PR-AUC & 0.9058 & 0.8761 & \multirow{5}{=}{Rules-Based algorithm, always available} \\
+ROC-AUC & 0.9926 & 0.9886 & \\
+Precision & 0.9739 & 0.8654 & \\
+Recall & 0.8056 & 0.8065 & \\
+F1 & 0.8818 & 0.8349 & \\
 \bottomrule
 \end{tabularx}
 \caption{Test set metrics}
@@ -1563,13 +1569,13 @@ Development ran on a single laptop. Table~\ref{tab:hardware} lists the specifica
 \hline
 \textbf{Component} & \textbf{Specification} \\
 \hline
-\includegraphics[height=1em]{processor.png}~Processor & AMD Ryzen 5 4600H, 6 cores / 12 threads, 3.0 GHz \\
+\raisebox{-0.3\height}{\includegraphics[height=1.3em]{processor.png}}~Processor & AMD Ryzen 5 4600H, 6 cores / 12 threads, 3.0 GHz \\
 \hline
-\includegraphics[height=1em]{ram.png}~Memory & 16 GB RAM \\
+\raisebox{-0.3\height}{\includegraphics[height=1.3em]{ram.png}}~Memory & 16 GB RAM \\
 \hline
-\includegraphics[height=1em]{hdd.png}~Storage & 512 GB NVMe SSD \\
+\raisebox{-0.3\height}{\includegraphics[height=1.3em]{hdd.png}}~Storage & 512 GB NVMe SSD \\
 \hline
-\includegraphics[height=1em]{windows.png}~Operating system & Windows 11 Home \\
+\raisebox{-0.3\height}{\includegraphics[height=1.3em]{windows.png}}~Operating system & Windows 11 Home \\
 \hline
 \end{tabular}
 \caption{Development machine}
@@ -1592,23 +1598,23 @@ that run in production (Tables~\ref{tab:dev-tools} and~\ref{tab:tech}).
 \hline
 \textbf{Tool} & \textbf{Purpose} \\
 \hline
-\includegraphics[height=1em]{intellij.png}~IntelliJ IDEA & Java / Spring Boot development and debugging \\
+\raisebox{-0.3\height}{\includegraphics[height=1.3em]{intellij.png}}~IntelliJ IDEA & Java / Spring Boot development and debugging \\
 \hline
-\includegraphics[height=1em]{vscode.png}~VS Code & Python, React, React Native, Electron \\
+\raisebox{-0.3\height}{\includegraphics[height=1.3em]{vscode.png}}~VS Code & Python, React, React Native, Electron \\
 \hline
-\includegraphics[height=1em]{drawio.png}~draw.io & Architecture and UML diagrams \\
+\raisebox{-0.3\height}{\includegraphics[height=1.3em]{drawio.png}}~draw.io & Architecture and UML diagrams \\
 \hline
-\includegraphics[height=1em]{figma.png}~Figma & UI/UX design (client app and backoffice) \\
+\raisebox{-0.3\height}{\includegraphics[height=1.3em]{figma.png}}~Figma & UI/UX design (client app and backoffice) \\
 \hline
-\includegraphics[height=1em]{postman.png}~Postman & API testing and endpoint validation \\
+\raisebox{-0.3\height}{\includegraphics[height=1.3em]{postman.png}}~Postman & API testing and endpoint validation \\
 \hline
-\includegraphics[height=1em]{pgadmin.png}~pgAdmin 4 & PostgreSQL database inspection \\
+\raisebox{-0.3\height}{\includegraphics[height=1.3em]{pgadmin.png}}~pgAdmin 4 & PostgreSQL database inspection \\
 \hline
-\includegraphics[height=1em]{dockerdesktop.png}~Docker Desktop & Local container orchestration \\
+\raisebox{-0.3\height}{\includegraphics[height=1.3em]{dockerdesktop.png}}~Docker Desktop & Local container orchestration \\
 \hline
-\includegraphics[height=1em]{github.png}~Github & Version control \\
+\raisebox{-0.3\height}{\includegraphics[height=1.3em]{github.png}}~Github & Version control \\
 \hline
-\includegraphics[height=1em]{texstudio.png}~TeXstudio & \LaTeX\ report writing \\
+\raisebox{-0.3\height}{\includegraphics[height=1.3em]{texstudio.png}}~TeXstudio & \LaTeX\ report writing \\
 \hline
 \end{tabular}
 \caption{Development tools}
@@ -1622,25 +1628,25 @@ that run in production (Tables~\ref{tab:dev-tools} and~\ref{tab:tech}).
 \hline
 \textbf{Layer} & \textbf{Technology} & \textbf{Version} \\
 \hline
-Backend & Java, \includegraphics[height=1em]{sb.png}~Spring Boot~[8] & 17 / 3.2.5 \\
+Backend & Java, \raisebox{-0.3\height}{\includegraphics[height=1.3em]{sb.png}}~Spring Boot~[8] & 17 / 3.2.5 \\
 \hline
-Authentication & \includegraphics[height=1em]{kc.png}~Keycloak~[9] & 24.0 \\
+Authentication & \raisebox{-0.3\height}{\includegraphics[height=1.3em]{kc.png}}~Keycloak~[9] & 24.0 \\
 \hline
-Database & \includegraphics[height=1em]{pg.png}~PostgreSQL & 16 \\
+Database & \raisebox{-0.3\height}{\includegraphics[height=1.3em]{pg.png}}~PostgreSQL & 16 \\
 \hline
-Client app (web) & \includegraphics[height=1em]{react.png}~React, \includegraphics[height=1em]{vite.png}~Vite, \includegraphics[height=1em]{ts.png}~TypeScript, \includegraphics[height=1em]{twcss.png}~Tailwind & Latest \\
+Client app (web) & \raisebox{-0.3\height}{\includegraphics[height=1.3em]{react.png}}~React, \raisebox{-0.3\height}{\includegraphics[height=1.3em]{vite.png}}~Vite, \raisebox{-0.3\height}{\includegraphics[height=1.3em]{ts.png}}~TypeScript, \raisebox{-0.3\height}{\includegraphics[height=1.3em]{twcss.png}}~Tailwind & Latest \\
 \hline
-Client app (mobile) & \includegraphics[height=1em]{react.png}~React Native~[10], \includegraphics[height=1em]{expo.png}~Expo & 0.76 / 52 \\
+Client app (mobile) & \raisebox{-0.3\height}{\includegraphics[height=1.3em]{react.png}}~React Native~[10], \raisebox{-0.3\height}{\includegraphics[height=1.3em]{expo.png}}~Expo & 0.76 / 52 \\
 \hline
-Backoffice (web) & \includegraphics[height=1em]{react.png}~React, \includegraphics[height=1em]{vite.png}~Vite, \includegraphics[height=1em]{ts.png}~TypeScript, \includegraphics[height=1em]{twcss.png}~Tailwind & Latest \\
+Backoffice (web) & \raisebox{-0.3\height}{\includegraphics[height=1.3em]{react.png}}~React, \raisebox{-0.3\height}{\includegraphics[height=1.3em]{vite.png}}~Vite, \raisebox{-0.3\height}{\includegraphics[height=1.3em]{ts.png}}~TypeScript, \raisebox{-0.3\height}{\includegraphics[height=1.3em]{twcss.png}}~Tailwind & Latest \\
 \hline
-Backoffice (desktop) & \includegraphics[height=1em]{elec.png}~Electron & 42 \\
+Backoffice (desktop) & \raisebox{-0.3\height}{\includegraphics[height=1.3em]{elec.png}}~Electron & 42 \\
 \hline
-ML service & \includegraphics[height=1em]{python.png}~Python, FastAPI~[11] & 3.11 \\
+ML service & \raisebox{-0.3\height}{\includegraphics[height=1.3em]{python.png}}~Python, FastAPI~[11] & 3.11 \\
 \hline
-Infrastructure & \includegraphics[height=1em]{dockerdesktop.png}~Docker, Docker Compose~[12] & 4.76.0 \\
+Infrastructure & \raisebox{-0.3\height}{\includegraphics[height=1.3em]{dockerdesktop.png}}~Docker, Docker Compose~[12] & 4.76.0 \\
 \hline
-Reverse proxy & \includegraphics[height=1em]{nginx.png}~Nginx & 1.29.8 \\
+Reverse proxy & \raisebox{-0.3\height}{\includegraphics[height=1.3em]{nginx.png}}~Nginx & 1.29.8 \\
 \hline
 \end{tabular}
 \caption{Technologies and frameworks}
@@ -1879,7 +1885,7 @@ unified account management with inline fraud scoring in a single system. PayZo i
 The backend is a Spring Boot service secured by Keycloak, connected to PostgreSQL and a CBS
 simulator, and deployable as a single Docker Compose stack. The fraud-detection layer trains
 on 500,000 synthetic transactions generated from per-user behavioural archetypes; the final
-model is a three-layer orchestrator with LightGBM as the primary scorer (PR-AUC 0.90,
+model is a three-layer orchestrator with LightGBM as the primary scorer (PR-AUC 0.91,
 ROC-AUC 0.99) and a rule-based firewall as the last resort. Transactions flagged at medium or
 high risk go to an analyst review queue. The client uses a React web app and a React Native
 mobile app; staff use a React web app and an Electron desktop app with role-scoped views for the Admin,
@@ -1936,19 +1942,19 @@ something a banking partner could run in production.
         International Conference on Knowledge Discovery and Data Mining, 694--699.
 
   \item Broadcom (VMware Tanzu). (2024). \textit{Spring Boot Reference Documentation}.
-        \url{https://spring.io/projects/spring-boot} [Accessed 30 May 2026]
+        \url{https://spring.io/projects/spring-boot} [Accessed 14 April 2026]
 
   \item Red Hat. (2024). \textit{Keycloak Documentation}.
-        \url{https://www.keycloak.org/documentation} [Accessed 30 May 2026]
+        \url{https://www.keycloak.org/documentation} [Accessed 17 April 2026]
 
   \item Meta Platforms. (2024). \textit{React Native Documentation}.
-        \url{https://reactnative.dev/} [Accessed 30 May 2026]
+        \url{https://reactnative.dev/} [Accessed 3 May 2026]
 
   \item Sebastián Ramírez. (2024). \textit{FastAPI Documentation}.
-        \url{https://fastapi.tiangolo.com/} [Accessed 30 May 2026]
+        \url{https://fastapi.tiangolo.com/} [Accessed 21 April 2026]
 
   \item Docker, Inc. (2024). \textit{Docker Documentation}.
-        \url{https://docs.docker.com/} [Accessed 30 May 2026]
+        \url{https://docs.docker.com/} [Accessed 28 April 2026]
 
   \item Roques, P. (2004). \textit{UML in Practice: The Art of Modeling Software Systems
         Demonstrated through Worked Examples and Solutions}. John Wiley \& Sons.
@@ -1973,78 +1979,78 @@ something a banking partner could run in production.
   \item \phantomsection\label{web:bct1}
         L'Économiste Maghrébin. \textit{Paiements électroniques en Tunisie : Résultats 2024}.
         \href{https://www.leconomistemaghrebin.com/2025/02/25/paiements-electroniques-tunisie/}%
-        {www.leconomistemaghrebin.com} [Accessed 30 May 2026]
+        {www.leconomistemaghrebin.com} [Accessed 4 February 2026]
 
   \item \phantomsection\label{web:bct2}
         Tunisie Numérique. \textit{Les paiements mobiles bondissent de 81\% en 2025}.
         \href{https://www.thd.tn/paiement-mobile-en-tunisie-81-de-transactions-en-2025/}%
-        {www.thd.tn} [Accessed 30 May 2026]
+        {www.thd.tn} [Accessed 6 February 2026]
 
   \item \phantomsection\label{web:veriff}
         Veriff / TechRadar. \textit{The Cost of Fraud: Fraud Report 2026}.
         \href{https://www.veriff.com/fraud/learn/the-cost-of-fraud}{www.veriff.com}
-        [Accessed 30 May 2026]
+        [Accessed 11 February 2026]
 
   \item \phantomsection\label{web:deepfake}
         VentureBeat / Deloitte. \textit{Deepfakes will cost \$40 billion by 2027 as
         adversarial AI gains momentum}.
         \href{https://venturebeat.com/security/deepfakes-will-cost-40-billion-by-2027-as-adversarial-ai-gains-momentum}%
-        {venturebeat.com} [Accessed 30 May 2026]
+        {venturebeat.com} [Accessed 13 February 2026]
 
   \item \phantomsection\label{web:deloitte}
         Deloitte Center for Financial Services. \textit{Deepfake Banking Fraud Risk on the
         Rise}.
         \href{https://www.deloitte.com/us/en/insights/industry/financial-services/deepfake-banking-fraud-risk-on-the-rise.html}%
-        {www.deloitte.com} [Accessed 30 May 2026]
+        {www.deloitte.com} [Accessed 15 February 2026]
 
   %% -- Datasets --
   \item \phantomsection\label{web:paysim}
         Kaggle. \textit{PaySim: Mobile Money Fraud Detection Dataset}.
         \href{https://www.kaggle.com/datasets/ealaxi/paysim1}{www.kaggle.com}
-        [Accessed 30 May 2026]
+        [Accessed 3 March 2026]
 
   \item \phantomsection\label{web:ieeecis}
         Kaggle. \textit{IEEE-CIS Fraud Detection Competition}.
         \href{https://www.kaggle.com/competitions/ieee-fraud-detection}{www.kaggle.com}
-        [Accessed 30 May 2026]
+        [Accessed 5 March 2026]
 
   \item \phantomsection\label{web:ulb}
         Kaggle / ULB Machine Learning Group. \textit{Credit Card Fraud Detection Dataset}.
         \href{https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud}{www.kaggle.com}
-        [Accessed 30 May 2026]
+        [Accessed 5 March 2026]
 
   %% -- Open-source repositories --
   \item \phantomsection\label{web:jube}
         Jube. \textit{AML Fraud Transaction Monitoring}.
         \href{https://github.com/jube-home/aml-fraud-transaction-monitoring}{github.com/jube-home}
-        [Accessed 30 May 2026]
+        [Accessed 9 March 2026]
 
   \item \phantomsection\label{web:hf}
         Hugging Face / vaibhav07112004. \textit{Fraud Detection Models}.
         \href{https://huggingface.co/vaibhav07112004/fraud-detection-models}%
-        {huggingface.co} [Accessed 30 May 2026]
+        {huggingface.co} [Accessed 11 March 2026]
 
   \item \phantomsection\label{web:sergio}
         sergio11. \textit{Online Payment Fraud Detection}.
         \href{https://github.com/sergio11/online_payment_fraud}{github.com/sergio11}
-        [Accessed 30 May 2026]
+        [Accessed 11 March 2026]
 
   %% -- Existing solutions --
   \item \phantomsection\label{web:n26}
         N26 GmbH. \textit{N26: The Mobile Bank}.
-        \href{https://n26.com/en-eu}{n26.com} [Accessed 30 May 2026]
+        \href{https://n26.com/en-eu}{n26.com} [Accessed 18 February 2026]
 
   \item \phantomsection\label{web:emma}
         Emma Technologies Ltd. \textit{Emma: Budget Planner \& Tracker}.
-        \href{https://emma-app.com/}{emma-app.com} [Accessed 30 May 2026]
+        \href{https://emma-app.com/}{emma-app.com} [Accessed 18 February 2026]
 
   \item \phantomsection\label{web:feedzai}
         Feedzai. \textit{Feedzai RiskOps Platform}.
-        \href{https://www.feedzai.com/}{www.feedzai.com} [Accessed 30 May 2026]
+        \href{https://www.feedzai.com/}{www.feedzai.com} [Accessed 20 February 2026]
 
   \item \phantomsection\label{web:plaid}
         Plaid Inc. \textit{Plaid: The Network That Powers Fintech}.
-        \href{https://plaid.com/}{plaid.com} [Accessed 30 May 2026]
+        \href{https://plaid.com/}{plaid.com} [Accessed 20 February 2026]
 
 \end{enumerate}
 

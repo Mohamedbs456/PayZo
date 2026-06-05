@@ -49,13 +49,21 @@ data:
   # in v5). Each archetype now reads the VICTIM's user archetype to draw
   # out-of-character amounts / hours from FRAUD_OVERRIDES (see
   # data_generation/fraud_archetypes.py).
+  # v5.1 rebalance: the per-event mix was producing a ROW population dominated
+  # by small-amount velocity fraud (CARD_TESTING/TROJAN setup explode into many
+  # rows each), so the per-user amount features (amount_z_score_user_30d,
+  # amount_pct_of_user_max_lifetime) had ~random separation. Weights now favour
+  # the amount-anomaly archetypes (LARGE_UNUSUAL = 1 row/event, TAKEOVER = 1-3)
+  # while CARD_TESTING n_range is capped (see fraud_archetypes.py) so velocity
+  # fraud stays represented without swamping the row budget.
+  # Weighted toward amount-anomaly fraud (LARGE_UNUSUAL/TAKEOVER) so per-user amount features separate; CARD_TESTING bursts capped in fraud_archetypes.py.
   fraud_mix:
-    TAKEOVER: 0.20
-    CARD_TESTING: 0.20
-    LARGE_UNUSUAL: 0.20
-    SLOW_DRAIN: 0.10
-    SAVINGS_FRAUD: 0.15
-    TROJAN_TAKEOVER: 0.15
+    TAKEOVER: 0.28
+    CARD_TESTING: 0.10
+    LARGE_UNUSUAL: 0.42
+    SLOW_DRAIN: 0.04
+    SAVINGS_FRAUD: 0.03
+    TROJAN_TAKEOVER: 0.13
 
 # ---------------------------------------------------------------------------
 # Temporal split — absolute month offsets from the dataset epoch.

@@ -96,16 +96,14 @@ FRAUD_OVERRIDES: dict[str, dict[str, dict]] = {
         "NIGHT_WORKER":       {"amount_range": (8_000,   25_000),  "n_range": (1, 3)},
     },
     "CARD_TESTING": {
-        # n_range bumped per archetype — BUSINESS_OWNER's velocity envelope is
-        # high enough that a 10-tx burst is unremarkable. Need 50+ to exceed
-        # even the coffee-shop tail.
-        "STUDENT":            {"amount_range": (5,   30),  "n_range": (10, 30)},
-        "YOUNG_PROFESSIONAL": {"amount_range": (50,  300), "n_range": (10, 30)},
-        "RETIREE":            {"amount_range": (20,  100), "n_range": (8, 20)},
-        "BUSINESS_OWNER":     {"amount_range": (100, 500), "n_range": (50, 200)},
-        "HIGH_NET_WORTH":     {"amount_range": (100, 800), "n_range": (15, 40)},
-        "INFREQUENT_USER":    {"amount_range": (5,   50),  "n_range": (5, 15)},
-        "NIGHT_WORKER":       {"amount_range": (30,  200), "n_range": (10, 25)},
+        # n_range capped: a small burst is already a clear per-user velocity anomaly, and big bursts swamped the fraud row budget.
+        "STUDENT":            {"amount_range": (5,   30),  "n_range": (8, 16)},
+        "YOUNG_PROFESSIONAL": {"amount_range": (50,  300), "n_range": (8, 16)},
+        "RETIREE":            {"amount_range": (20,  100), "n_range": (6, 12)},
+        "BUSINESS_OWNER":     {"amount_range": (100, 500), "n_range": (15, 35)},
+        "HIGH_NET_WORTH":     {"amount_range": (100, 800), "n_range": (10, 20)},
+        "INFREQUENT_USER":    {"amount_range": (5,   50),  "n_range": (5, 12)},
+        "NIGHT_WORKER":       {"amount_range": (30,  200), "n_range": (8, 16)},
     },
     "LARGE_UNUSUAL": {
         # 5-10× the archetype's legit p95.
@@ -467,8 +465,8 @@ def _inject_trojan_takeover(seed_user, accounts_by_cin, dataset_start, dataset_e
 
     rows = []
 
-    # Phase A: 5-15 small "trust-building" transfers at archetype-typical hours.
-    n_setup = int(rng.integers(5, 16))
+    # Phase A: 2-5 small "trust-building" transfers at archetype-typical hours.
+    n_setup = int(rng.integers(2, 6))
     setup_amounts = rng.uniform(setup_lo, setup_hi, size=n_setup)
     base_offsets = np.linspace(0, setup_window_days, n_setup) + rng.uniform(-0.5, 0.5, size=n_setup)
     for i in range(n_setup):
@@ -494,7 +492,7 @@ def _inject_trojan_takeover(seed_user, accounts_by_cin, dataset_start, dataset_e
 
     # Phase B: 1-3 large drain transfers at off-hours (out of character).
     drain_start = setup_start + pd.Timedelta(days=setup_window_days + drain_offset_days)
-    n_drain = int(rng.integers(1, 4))
+    n_drain = int(rng.integers(2, 5))
     for _ in range(n_drain):
         ts = drain_start + pd.Timedelta(minutes=int(rng.integers(0, 6 * 60)))
         # 80% off-hours for drain.
