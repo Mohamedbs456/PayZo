@@ -41,15 +41,26 @@ if ("$code" -eq "200") {
 }
 
 Write-Host ""
-Write-Host "[4/4] Launching PayZo..." -ForegroundColor White
+Write-Host "[4/5] Launching PayZo..." -ForegroundColor White
 if (-not (& $adb shell pm list packages $pkg)) {
   Write-Host "  PayZo is not installed on the phone. Install the APK first (see PRESENTATION.md)." -ForegroundColor Red
   Read-Host "Press Enter to close"; exit 1
 }
 & $adb shell monkey -p $pkg -c android.intent.category.LAUNCHER 1 | Out-Null
+Write-Host "  app launched - log in as usual (OTP arrives by email)." -ForegroundColor Green
 
 Write-Host ""
-Write-Host "Ready. The app is open on your phone - log in as usual (OTP arrives by email)." -ForegroundColor Green
-Write-Host "Keep the phone plugged in for the whole demo." -ForegroundColor Green
+Write-Host "[5/5] Mirroring the phone (scrcpy)..." -ForegroundColor White
+# Pin scrcpy to the same adb this script uses, so there is only ever one adb server.
+$env:ADB = $adb
+$scrcpy = (Get-Command scrcpy -ErrorAction SilentlyContinue).Source
+if (-not $scrcpy) {
+  Write-Host "  scrcpy not on PATH. App is running on the phone; mirror skipped." -ForegroundColor Yellow
+  Write-Host "  Keep the phone plugged in for the whole demo." -ForegroundColor Green
+  Read-Host "Press Enter to close"; exit 0
+}
+Write-Host "  mirror window is opening. Close it to end the demo." -ForegroundColor Green
+Write-Host "  Keep the phone plugged in for the whole demo." -ForegroundColor Green
 Write-Host ""
-Read-Host "Press Enter to close"
+# Blocks here until you close the mirror window - that window IS the demo.
+& $scrcpy --stay-awake --max-size 1200

@@ -11,3 +11,13 @@ services:
       - "5005:5005"
     volumes:
       - ${USERPROFILE:-.}/.m2:/root/.m2:ro
+
+  # Dev override for the CBS simulator: persist cbs_db across restarts instead of
+  # the production default ddl-auto=create. This keeps the SQL-seeded backoffice
+  # demo clients (Backend/seed_dev_cbs.sql) alive after a `docker compose up`,
+  # which is required so the backoffice fraud-alert approve flow (which executes a
+  # real CBS transfer) works for the seeded clients. DataInitializer stays
+  # idempotent (it guards on clientRepository.count()), so it won't re-seed.
+  cbs-simulator:
+    environment:
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
